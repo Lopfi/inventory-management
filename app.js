@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const sqlite3 = require('sqlite3');
+const sqlite3 = require('sqlite3').verbose();;
 
 let db = new sqlite3.Database("./db/content.db", sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
   if (err) {
@@ -13,6 +13,11 @@ let db = new sqlite3.Database("./db/content.db", sqlite3.OPEN_READWRITE | sqlite
 
 
 app.use(express.static(path.join(__dirname, "public")));
+app.get("/", (req, res) => res.sendfile(./content/index.html));
+app.get("/item", (req, res) => {
+  let id = req.query.id;
+
+});
 app.get("*", (req, res) => res.send("404"));
 
 app.listen(80, () => {
