@@ -12,7 +12,6 @@ let db = new sqlite3.Database("./db/content.db", sqlite3.OPEN_READWRITE | sqlite
 });
 
 
-
 app.use(express.static(path.join(__dirname, "public")));
 app.get("*", (req, res) => res.send("404"));
 
