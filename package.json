@@ -1,0 +1,26 @@
+{
+  "name": "inventory-management",
+  "version": "1.0.0",
+  "description": "A simple QR-Code and web based inventory system to help keeping track off stuff",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lopfi/inventory-management.git"
+  },
+  "author": "Lopfi, P3ntest",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Lopfi/inventory-management/issues"
+  },
+  "homepage": "https://github.com/Lopfi/inventory-management#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "sqlite3": "^4.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
