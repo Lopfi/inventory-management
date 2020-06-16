@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();;
+const bodyParser = require('body-parser');
 
 let db = new sqlite3.Database("./db/content.db", sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
   if (err) {
@@ -11,29 +12,33 @@ let db = new sqlite3.Database("./db/content.db", sqlite3.OPEN_READWRITE | sqlite
   }
 });
 
-db.run(`CREATE TABLE [IF NOT EXISTS] items (
+db.run(`CREATE TABLE IF NOT EXISTS items (
 	itemid INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     description TEXT,
     locationid INTEGER NOT NULL,
     image TEXT
     );
-    CREATE TABLE [IF NOT EXISTS] locations (
+    CREATE TABLE IF NOT EXISTS locations (
 	locationid INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     description TEXT,
     image TEXT
-    );`)
-
+    );`, function(err) {
+    if (err) {
+      return console.log(err.message);
+    }    // get the last insert id
+    console.log(`A row has been inserted with rowid ${this.lastID}`);
+    });
 
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.urlencoded());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 
 app.get("/", (req, res) => res.sendfile("./content/index.html"));
 
-app.get("/item?id=[itemid]", (req, res) => {
+app.get("/item", (req, res) => {
   let itemid = req.query.id;
   let sql = `SELECT *
            FROM items
@@ -42,7 +47,8 @@ app.get("/item?id=[itemid]", (req, res) => {
     if (err) {
       console.log("Error: " + err.message);
     } else {
-      res.send(JSON.stringify({"id": row.id,
+      res.send(JSON.stringify({
+        "id": row.id,
         "name": row.name,
         "description": row.description,
         "location": row.location,
@@ -51,7 +57,7 @@ app.get("/item?id=[itemid]", (req, res) => {
   });
 });
 
-app.get("/location?id=[locationid]", (req, res) => {
+app.get("/location", (req, res) => {
   let locationid = req.query.id;
   let sql = `SELECT *
            FROM locations
@@ -81,20 +87,21 @@ app.post("/dellocation", (req, res) => {
 });
 
 app.post("/additem", (req, res) => {
-  let itemid =  request.body.itemid;
-  let name = request.body.name;
-  let description = request.body.description;
-  let location = request.body.location;
-  let image = request.body.image;
+  let itemid =  req.body.itemid;
+  let name = req.body.name;
+  let description = req.body.description;
+  let locationid = req.body.locationid;
+  let image = req.body.image;
   let sql = `INSERT INTO items VALUES(?,?,?,?,?)`;
-  db.run(sql, [itemid, name, description, location, image]);
+  db.run(sql, [itemid, name, description, locationid, image]);
+  res.send(req.body);
 });
 
 app.post("/addlocation", (req, res) => {
-  let itemid =  request.body.itemid;
-  let name = request.body.name;
-  let description = request.body.description;
-  let image = request.body.image;
+  let itemid =  req.body.itemid;
+  let name = req.body.name;
+  let description = req.body.description;
+  let image = req.body.image;
   let sql = `INSERT INTO items VALUES(?,?,?,?)`;
   db.run(sql, [itemid, name, description, image]);
 });
