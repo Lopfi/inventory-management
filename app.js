@@ -7,23 +7,23 @@ let db = new sqlite3.Database("./db/content.db", sqlite3.OPEN_READWRITE | sqlite
   if (err) {
     console.log("Error: " + err.message);
   } else {
-    console.log("db connection succesful");
+    console.log("db connection successful");
   }
 });
 
-// CREATE TABLE [IF NOT EXISTS] items (
-// 	itemid INTEGER PRIMARY KEY,
-//   name TEXT NOT NULL,
-//   description TEXT,
-//   locationid INTEGER NOT NULL,
-//   image TEXT
-// ) [WITHOUT ROWID];
-// CREATE TABLE [IF NOT EXISTS] locations (
-// 	locationid INTEGER PRIMARY KEY,
-//   name TEXT NOT NULL,
-//   description TEXT,
-//   image TEXT
-// ) [WITHOUT ROWID];
+db.run(`CREATE TABLE [IF NOT EXISTS] items (
+	itemid INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    locationid INTEGER NOT NULL,
+    image TEXT
+    );
+    CREATE TABLE [IF NOT EXISTS] locations (
+	locationid INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    image TEXT
+    );`)
 
 
 app.use(express.static(path.join(__dirname, "public")));
