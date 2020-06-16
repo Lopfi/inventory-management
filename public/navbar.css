@@ -1,0 +1,28 @@
+.navbar {
+    background-color: #777;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+}
+
+/* Style the links inside the navigation bar */
+.navbar a {
+    color: #f2f2f2;
+    text-align: center;
+    text-decoration: none;
+    font-size: 24px;
+    height: 100%;
+    width: 50vw;
+    margin: auto;
+    padding: 3vh;
+}
+
+/* Add a color to the active/current link */
+.active-navbar-button {
+    color: black;
+    background: rgb(246,0,67);
+    background: linear-gradient(50deg, rgba(246,0,67,1) 0%, rgba(0,228,255,1) 100%);
+}

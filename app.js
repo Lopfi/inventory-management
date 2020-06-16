@@ -13,7 +13,7 @@ let db = new sqlite3.Database("./db/content.db", sqlite3.OPEN_READWRITE | sqlite
 
 
 app.use(express.static(path.join(__dirname, "public")));
-app.get("/", (req, res) => res.sendfile(./content/index.html));
+app.get("/", (req, res) => res.sendfile("./content/index.html"));
 app.get("/item", (req, res) => {
   let id = req.query.id;
 
