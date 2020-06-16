@@ -11,19 +11,19 @@ let db = new sqlite3.Database("./db/content.db", sqlite3.OPEN_READWRITE | sqlite
   }
 });
 
-CREATE TABLE [IF NOT EXISTS] items (
-	itemid INTEGER PRIMARY KEY,
-  name TEXT NOT NULL,
-  description TEXT,
-  locationid INTEGER NOT NULL,
-  image TEXT
-) [WITHOUT ROWID];
-CREATE TABLE [IF NOT EXISTS] locations (
-	locationid INTEGER PRIMARY KEY,
-  name TEXT NOT NULL,
-  description TEXT,
-  image TEXT
-) [WITHOUT ROWID];
+// CREATE TABLE [IF NOT EXISTS] items (
+// 	itemid INTEGER PRIMARY KEY,
+//   name TEXT NOT NULL,
+//   description TEXT,
+//   locationid INTEGER NOT NULL,
+//   image TEXT
+// ) [WITHOUT ROWID];
+// CREATE TABLE [IF NOT EXISTS] locations (
+// 	locationid INTEGER PRIMARY KEY,
+//   name TEXT NOT NULL,
+//   description TEXT,
+//   image TEXT
+// ) [WITHOUT ROWID];
 
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -31,7 +31,7 @@ app.use(express.urlencoded());
 app.use(express.json());
 
 
-app.get("/", (req, res) => res.sendfile(./content/index.html));
+app.get("/", (req, res) => res.sendfile("./content/index.html"));
 
 app.get("/item?id=[itemid]", (req, res) => {
   let itemid = req.query.id;

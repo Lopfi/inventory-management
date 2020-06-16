@@ -1,8 +1,14 @@
+:root {
+    --accent-color: #ff6a19;
+}
+
 body {
     font-family: sans-serif;
     margin: 0;
     padding: 0;
     overflow: hidden;
+    width: 100vw;
+    height: 100vh;
 }
 
 .content-wrapper {
@@ -36,19 +42,33 @@ body {
 .buttons {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
 }
 
 .bottom-button {
-    background: #3763ff;
+    background: var(--accent-color);
     border-radius: 60px;
     padding: 0;
     margin: 20px;
-    box-shadow: 4px 4px 5px 0px #4b4b4b;
+    margin-top: 5px;
+    height: 60px;
+    width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 6px 6px 7px 0px rgba(0,0,0,0.75);
+}
+
+.n-button {
+    background-color: gray;
+    width: 50px;
+    height: 50px;
+    margin-bottom: 15px;
 }
 
 svg {
     padding: 0;
     margin: 0;
+    fill: white;
 }
