@@ -16,3 +16,7 @@ function setPage(page) {
 $(document).ready(() => {
     setPage("items-page");
 });
+
+function scan() {
+    ret
+}
