@@ -38,6 +38,25 @@ app.use(express.json());
 
 app.get("/", (req, res) => res.sendfile("./content/index.html"));
 
+app.get("/items", (req, res) => {
+  let limit = req.query.limit;
+  let offset = req.query.offset;
+  let sql = `SELECT *
+           FROM items
+           LIMIT ? OFFSET ?`;
+  db.all(sql, [limit, offset], (err, rows) => {
+    if (err) {
+      console.log("Error: " + err.message);
+    } else {
+      let response = [];
+      rows.forEach((row) => {
+        response.push(row);
+      });
+      res.send(JSON.stringify(response));
+    }
+  });
+});
+
 app.get("/item", (req, res) => {
   let itemid = req.query.id;
   let sql = `SELECT *
