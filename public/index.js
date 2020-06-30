@@ -17,6 +17,3 @@ $(document).ready(() => {
     setPage("items-page");
 });
 
-function redirect(site) {
-    window.location.href = site;
-}

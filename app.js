@@ -36,7 +36,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 
-app.get("/", (req, res) => res.sendfile("./content/index.html"));
+app.get("/", (req, res) => res.sendFile(path.join(__dirname, '/content', 'index.html')))
+app.get("/item", (req, res) => res.sendFile(path.join(__dirname, '/content', 'item.html')))
 
 app.get("/items", (req, res) => {
   let limit = req.query.limit;
@@ -57,7 +58,7 @@ app.get("/items", (req, res) => {
   });
 });
 
-app.get("/item", (req, res) => {
+app.get("/itemdata", (req, res) => {
   let itemid = req.query.id;
   let sql = `SELECT *
            FROM items
