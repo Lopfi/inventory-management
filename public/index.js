@@ -1,19 +1,26 @@
-function setPage(page) {
-    $(".site-page").each(function(i,e) {
-        let x = $(e);
-        x.removeClass("show");
-    });
-    $("#" + page).addClass("show");
+//id, name, description, location, image
 
-    $(".navbar-button").each(function(i,e) {
-        let x = $(e);
-        x.removeClass("active-navbar-button");
-    });
-
-    $("#" + page + "-button").addClass("active-navbar-button");
-}
-
-$(document).ready(() => {
-    setPage("items-page");
+$.ajax({
+    url: '/items?limit=10&offset=0',
+    success: function(result){
+        items = JSON.parse(result);
+        console.log(result);
+        $('#resultcount').html(`found ${items.length} results`);
+        $.each(items, function (i, item) {
+            $('#items').append(`<li class="item" id=${item.itemid}" onclick="showItem(${item.itemid})">${item.name}
+            <br>${item.locationid}</li>`);
+        });
+     }
 });
 
+function showItem(id) {
+    $.ajax({
+        url: '/itemdata?id=' + id,
+        success: function(result) {
+            item = JSON.parse(result);
+            $('#item-heading').html(`${item.name}`);
+            $('#item-image').html(`<img src="../public/images/${item.image}" alt="couldnt load image">`);
+            $('#item-attriebutes').html(`Id: ${item.itemid}<br>Name: ${item.name}<br>Description: ${item.description}<br>Location: ${item.locationid}`);
+        }
+    });
+}

@@ -12,17 +12,12 @@ let db = new sqlite3.Database("./db/content.db", sqlite3.OPEN_READWRITE | sqlite
   }
 });
 
-db.run(`CREATE TABLE IF NOT EXISTS items (
+db.run(`
+CREATE TABLE IF NOT EXISTS items (
 	itemid INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     description TEXT,
     locationid INTEGER NOT NULL,
-    image TEXT
-    );
-    CREATE TABLE IF NOT EXISTS locations (
-	locationid INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
-    description TEXT,
     image TEXT
     );`, function(err) {
     if (err) {
@@ -31,13 +26,26 @@ db.run(`CREATE TABLE IF NOT EXISTS items (
     console.log(`A row has been inserted with rowid ${this.lastID}`);
     });
 
+db.run(`
+CREATE TABLE IF NOT EXISTS locations (
+  locationid INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    image TEXT
+    );`, function(err) {
+if (err) {
+  return console.log(err.message);
+}    // get the last insert id
+console.log(`A row has been inserted with rowid ${this.lastID}`);
+});
+
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 
-app.get("/", (req, res) => res.sendFile(path.join(__dirname, '/content', 'index.html')))
-app.get("/item", (req, res) => res.sendFile(path.join(__dirname, '/content', 'item.html')))
+app.get("/", (req, res) => res.sendFile(path.join(__dirname, '/content', 'index.html')));
+app.get("/add", (req, res) => res.sendFile(path.join(__dirname, '/content', 'add.html')));
 
 app.get("/items", (req, res) => {
   let limit = req.query.limit;
@@ -68,10 +76,10 @@ app.get("/itemdata", (req, res) => {
       console.log("Error: " + err.message);
     } else {
       res.send(JSON.stringify({
-        "id": row.id,
+        "itemid": row.itemid,
         "name": row.name,
         "description": row.description,
-        "location": row.location,
+        "locationid": row.locationid,
         "image": row.image}));
     }
   });
@@ -86,7 +94,7 @@ app.get("/location", (req, res) => {
     if (err) {
       console.log("Error: " + err.message);
     } else {
-      res.send(JSON.stringify({"id": row.id,
+      res.send(JSON.stringify({"id": row.locationid,
         "name": row.name,
         "description": row.description,
         "image": row.image}));
@@ -118,12 +126,12 @@ app.post("/additem", (req, res) => {
 });
 
 app.post("/addlocation", (req, res) => {
-  let itemid =  req.body.itemid;
+  let locationid =  req.body.locationid;
   let name = req.body.name;
   let description = req.body.description;
   let image = req.body.image;
   let sql = `INSERT INTO items VALUES(?,?,?,?)`;
-  db.run(sql, [itemid, name, description, image]);
+  db.run(sql, [locationid, name, description, image]);
 });
 
 app.get("*", (req, res) => res.send("404"));
