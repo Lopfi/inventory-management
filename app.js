@@ -46,6 +46,7 @@ app.use(express.json());
 
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, '/content', 'index.html')));
 app.get("/add", (req, res) => res.sendFile(path.join(__dirname, '/content', 'add.html')));
+app.get("/del", (req, res) => res.sendFile(path.join(__dirname, '/content', 'delete.html')));
 
 app.get("/items", (req, res) => {
   let limit = req.query.limit;
@@ -103,35 +104,39 @@ app.get("/location", (req, res) => {
 });
 
 app.post("/delitem", (req, res) => {
-  let itemid = request.body.itemid;
+  let itemid = req.body.id;
   let sql = `DELETE FROM items WHERE itemid = ?`;
   db.run(sql, [itemid]);
+  res.sendFile(path.join(__dirname, '/content', 'index.html'));
 });
 
 app.post("/dellocation", (req, res) => {
-  let locationid = request.body.locationid;
+  let locationid = req.body.id;
   let sql = `DELETE FROM locations WHERE locationid = ?`;
   db.run(sql, [locationid]);
+  res.sendFile(path.join(__dirname, '/content', 'index.html'));
 });
 
 app.post("/additem", (req, res) => {
-  let itemid =  req.body.itemid;
+  console.log()
+  let itemid =  req.body.id;
   let name = req.body.name;
   let description = req.body.description;
   let locationid = req.body.locationid;
   let image = req.body.image;
   let sql = `INSERT INTO items VALUES(?,?,?,?,?)`;
   db.run(sql, [itemid, name, description, locationid, image]);
-  res.send(req.body);
+  res.sendFile(path.join(__dirname, '/content', 'index.html'));
 });
 
 app.post("/addlocation", (req, res) => {
-  let locationid =  req.body.locationid;
+  let locationid =  req.body.id;
   let name = req.body.name;
   let description = req.body.description;
   let image = req.body.image;
-  let sql = `INSERT INTO items VALUES(?,?,?,?)`;
+  let sql = `INSERT INTO locations VALUES(?,?,?,?)`;
   db.run(sql, [locationid, name, description, image]);
+  res.sendFile(path.join(__dirname, '/content', 'index.html'));
 });
 
 app.get("*", (req, res) => res.send("404"));

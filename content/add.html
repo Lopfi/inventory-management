@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>add an Item</title>
+    <title>Add</title>
     <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 </head>
 <body>
     <select class="type">
-        <option value="Item">Item</option>
-        <option value="Location">Location</option>
+        <option value="item">Item</option>
+        <option value="location">Location</option>
     </select>
-    <form action="/addItem" method="post" id="form">
+    <form action="/additem" method="post" id="form">
         <label for="Id">Id:</label><br>
         <input type="text" id="id" name="id" value=""><br>
         <label for="Name">Name:</label><br>
@@ -18,7 +18,7 @@
         <label for="Description">Description:</label><br>
         <input type="text" id="description" name="description" value=""><br>
         <label for="Location">Location:</label><br>
-        <input type="text" id="location" name="location" value=""><br>
+        <input type="text" id="locationid" name="locationid" value=""><br>
         <label for="Image">Image:</label><br>
         <input type="file" id="image" name="image" value=""><br><br>
         <input type="submit" value="Add">

@@ -19,8 +19,8 @@ function showItem(id) {
         success: function(result) {
             item = JSON.parse(result);
             $('#item-heading').html(`${item.name}`);
-            $('#item-image').html(`<img src="../public/images/${item.image}" alt="couldnt load image">`);
-            $('#item-attriebutes').html(`Id: ${item.itemid}<br>Name: ${item.name}<br>Description: ${item.description}<br>Location: ${item.locationid}`);
+            $('#item-image').html(`<img src="../public/img/${item.image}" alt="couldnt load image">`);
+            $('#item-attributes').html(`Id: ${item.itemid}<br>Name: ${item.name}<br>Description: ${item.description}<br>Location: ${item.locationid}`);
         }
     });
 }
