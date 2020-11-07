@@ -7,8 +7,12 @@
     <link rel="stylesheet" href="/list.css">
     <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/index.js" defer></script>
 </head>
 <body>
+    <header>
+        <h1 class="heading"></h1>
+    </header>
 <div class="results">
     <p id="resultcount"></p>
     <ul id="items"></ul>
@@ -18,14 +22,18 @@
     <div id="item-image"></div>
     <p id="item-attributes"></p>
 </div>
+<div class="location">
+    <h1 id="location-heading"></h1>
+    <div id="location-image"></div>
+    <p id="location-attributes"></p>
+</div>
 <div class="bottom-float">
-        <a href="/add" id="add-button" class="navbar-button" onclick="">Add</a>
-        <a href="/del" id="delete-button" class="navbar-button" onclick="">Delete</a>   
-        <a href="#" id="scan-button" class="navbar-button" onclick="">Scann</a> 
-        <a href="#" id="items-page-button" class="navbar-button" onclick="">Items</a>
-        <a href="#" id="locations-page-button" class="navbar-button" onclick="">Locations</a>
+        <a href="/add" id="add-btn" class="navbar-button" onclick="">Add</a>
+        <a href="/del" id="delete-btn" class="navbar-button" onclick="">Delete</a>   
+        <a href="#" id="scan-btn" class="navbar-button" onclick="">Scann</a> 
+        <a href="#" id="items-btn" class="navbar-button">Items</a>
+        <a href="#" id="locations-btn" class="navbar-button" onclick="locations()">Locations</a>
     </div>
 </div>
 </body>
-    <script src="/index.js"></script>
 </html>
