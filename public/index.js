@@ -6,6 +6,7 @@ function showItem(id) {
         success: function(result) {
             item = JSON.parse(result);
             console.log(item);
+            $('.results')[0].style.display = "none";
             $('#item-heading').html(`${item.name}`);
             $('#item-image').html(`<img src="../public/img/${item.image}" alt="couldnt load image">`);
             $('#item-attributes').html(`Id: ${item.item_id}<br>Name: ${item.name}<br>Description: ${item.description}<br>Location: ${item.location_id}`);
@@ -31,7 +32,6 @@ $('#locations-btn').on('click', function(evt) {
         success: function(result){
             locations = JSON.parse(result);
             console.log(result);
-            $('.heading').html(`Locations`);
             $('#resultcount').html(`found ${locations.length} locations`);
             $.each(locations, function (i, location) {
                 $('#items').append(`<li class="location" onclick="showLocation(${location.location_id})">${location.name}
@@ -48,7 +48,6 @@ $('#items-btn').on('click', function(evt) {
         success: function(result){
             items = JSON.parse(result);
             console.log(result);
-            $('.heading').html(`Items`);
             $('#resultcount').html(`found ${items.length} items`);
             $.each(items, function (i, item) {
                 $('#items').append(`<li class="item" id=${item.item_id}" onclick="showItem(${item.item_id})">${item.name}
