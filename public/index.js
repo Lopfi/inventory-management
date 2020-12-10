@@ -1,5 +1,5 @@
 //id, name, description, location, image
-$('#locations-btn').addEventListener('click', function () {
+$('#locations-btn').click(function (){
     $.ajax({
         url: '/locations?limit=10&offset=0',
         success: function(result){
@@ -15,13 +15,13 @@ $('#locations-btn').addEventListener('click', function () {
     return false;//Returning false prevents the event from continuing up the chain
 });
 
-$('#items-btn').addEventListener('click', function () {
+$('#items-btn').click(function (){
     $.ajax({
         url: '/items?limit=10&offset=0',
         success: function(result){
             let items = JSON.parse(result);
             console.log(result);
-            $('#items-btn').classList.add("active");
+            $('#items-btn').addClass("active");
             $('#result-count').html(`found ${items.length} items`);
             $.each(items, function (i, item) {
                 $('#items').append(`<li class="item" id=${item.item_id}" onclick="showItem(${item.item_id})">${item.name}
