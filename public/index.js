@@ -43,7 +43,8 @@ $('#locations-btn').click(function (){
                     $('#result-list').append(`
                     <li class="location" onclick="showLocation(${location.locationID})">
                     ${location.locationName}<br>
-                    ${location.locationID}
+                    ID: ${location.locationID}<br>
+                    Items: ${location.amount}
                     </li>`);
                 });
             }

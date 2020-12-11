@@ -74,8 +74,11 @@ app.get("/itemlist", (req, res) => {
 app.get("/locationlist", (req, res) => {
   let limit = req.query.limit;
   let offset = req.query.offset;
-  let sql = `SELECT locations.locationID, locations.locationName, locations.image 
+  let sql = `SELECT locations.locationID, locations.locationName, locations.image, count(items.itemID) AS amount
              FROM locations
+             INNER JOIN items
+             ON locations.locationID = items.locationID
+             GROUP BY locations.locationName
              LIMIT ? OFFSET ?`;
   db.all(sql, [limit, offset], (err, rows) => {
     if (err) {
@@ -139,13 +142,17 @@ app.get("/locationdata", (req, res) => {  //maybe rename to /location
 app.post("/delitem", (req, res) => {
   let itemID = req.body.itemID;
   let sql = `DELETE FROM items WHERE itemID = ?`;
-  db.run(sql, [itemID]);
+  db.run(sql, [itemID], (err) => {
+    if (err) console.log("Error: " + err.message);
+  });
 });
 
 app.post("/dellocation", (req, res) => {
   let locationID = req.body.locationID;
   let sql = `DELETE FROM locations WHERE locationID = ?`;
-  db.run(sql, [locationID]);
+  db.run(sql, [locationID], (err) => {
+    if (err) console.log("Error: " + err.message);
+  });
 });
 
 app.post("/additem", (req, res) => {
@@ -155,7 +162,9 @@ app.post("/additem", (req, res) => {
   let locationID = req.body.locationID;
   let image = req.body.image;
   let sql = `INSERT INTO items (itemName, description, locationID, image) VALUES(?,?,?,?)`;
-  db.run(sql, [itemName, description, locationID, image]);
+  db.run(sql, [itemName, description, locationID, image], (err) => {
+    if (err) console.log("Error: " + err.message);
+  });
 });
 
 app.post("/addlocation", (req, res) => {
@@ -163,7 +172,9 @@ app.post("/addlocation", (req, res) => {
   let description = req.body.description;
   let image = req.body.image;
   let sql = `INSERT INTO locations (locationName, description, image) VALUES(?,?,?)`;
-  db.run(sql, [locationName, description, image]);
+  db.run(sql, [locationName, description, image], (err) => {
+    if (err) console.log("Error: " + err.message);
+  });
 });
 
 app.get("*", (req, res) => res.status(404).send("404"));
@@ -171,9 +182,3 @@ app.get("*", (req, res) => res.status(404).send("404"));
 app.listen(80, () => {
   console.log("App listening on 80");
 });
-
-/*SELECT locations.locationName, count(items.itemID)
-FROM locations
-INNER JOIN items
-ON locations.locationID = items.locationID
-GROUP BY locations.locationName*/
