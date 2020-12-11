@@ -50,25 +50,6 @@ app.get("/add", (req, res) => res.sendFile(path.join(__dirname, '/content', 'add
 app.get("/scan", (req, res) => res.sendFile(path.join(__dirname, '/content', 'scanner.html')));
 
 app.get("/items", (req, res) => {
-  let limit = req.query.limit;
-  let offset = req.query.offset;
-  let sql = `SELECT *
-           FROM items
-           LIMIT ? OFFSET ?`;
-  db.all(sql, [limit, offset], (err, rows) => {
-    if (err) {
-      console.log("Error: " + err.message);
-    } else {
-      let response = [];
-      rows.forEach((row) => {
-        response.push(row);
-      });
-      res.send(JSON.stringify(response));
-    }
-  });
-});
-
-app.get("/items", (req, res) => {
   let locationID = req.query.locationID;
   let sql = `SELECT *
            FROM items
