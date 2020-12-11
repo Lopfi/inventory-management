@@ -72,9 +72,8 @@ app.get("/itemlist", (req, res) => {
 app.get("/locationlist", (req, res) => {
   let limit = req.query.limit;
   let offset = req.query.offset;
-  let sql = `SELECT location.locationID, location.locationName, location.image, 
-             COUNT(items.itemID WHERE items.locationID = locations.locationID)
-             FROM locations, items
+  let sql = `SELECT locations.locationID, locations.locationName, locations.image 
+             FROM locations
              LIMIT ? OFFSET ?`;
   db.all(sql, [limit, offset], (err, rows) => {
     if (err) {
@@ -95,25 +94,6 @@ app.get("/items", (req, res) => {
            FROM items
            WHERE locationID = ?`;
   db.all(sql, [locationID], (err, rows) => {
-    if (err) {
-      console.log("Error: " + err.message);
-    } else {
-      let response = [];
-      rows.forEach((row) => {
-        response.push(row);
-      });
-      res.send(JSON.stringify(response));
-    }
-  });
-});
-
-app.get("/locations", (req, res) => {
-  let limit = req.query.limit;
-  let offset = req.query.offset;
-  let sql = `SELECT *
-           FROM locations
-           LIMIT ? OFFSET ?`;
-  db.all(sql, [limit, offset], (err, rows) => {
     if (err) {
       console.log("Error: " + err.message);
     } else {

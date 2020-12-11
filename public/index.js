@@ -23,13 +23,13 @@ $('#items-btn').click(function (){
 
 $('#locations-btn').click(function (){
     $.ajax({
-        url: '/locations?limit=10&offset=0',
+        url: '/locationlist?limit=10&offset=0',
         success: function(result){
             locations = JSON.parse(result);
             console.log(result);
             $('#result-count').html(`found ${locations.length} locations`);
             $.each(locations, function (i, location) {
-                $('#items').append(`<li class="location" onclick="showLocation(${location.locationID})">${location.name}
+                $('#items').append(`<li class="location" onclick="showLocation(${location.locationID})">${location.locationName}
                 <br>${location.locationID}</li>`);
             });
         }
