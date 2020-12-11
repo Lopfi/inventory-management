@@ -25,7 +25,7 @@ $('#locations-btn').click(function (){
     $.ajax({
         url: '/locationlist?limit=10&offset=0',
         success: function(result){
-            locations = JSON.parse(result);
+            let locations = JSON.parse(result);
             console.log(result);
             $('#result-count').html(`found ${locations.length} locations`);
             $.each(locations, function (i, location) {
@@ -41,7 +41,7 @@ function showItem(itemID) {
     $.ajax({
         url: '/itemdata?itemID=' + itemID,
         success: function(result) {
-            item = JSON.parse(result);
+            let item = JSON.parse(result);
             console.log(item);
             $('.results').addClass("invisible");
             $('#item-heading').html(`${item.itemName}`);
@@ -49,13 +49,14 @@ function showItem(itemID) {
             $('#item-attributes').html(`Id: ${item.itemID}<br>Name: ${item.itemName}<br>Description: ${item.description}<br>Location: ${item.locationID}`);
         }
     });
+
 }
 
 function showLocation(locationID) {
     $.ajax({
         url: '/locationdata?locationID=' + locationID,
         success: function(result) {
-            location = JSON.parse(result);
+            let location = JSON.parse(result);
             $('#thing-heading').html(`${location.locationName}`);
             $('#thing-image').html(`<img src="../public/img/${item.image}" alt="couldnt load image">`);
             $('#thing-attributes').html(`Id: ${location.locationID}<br>Name: ${location.name}<br>Description: ${location.description}`);
