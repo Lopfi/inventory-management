@@ -44,9 +44,9 @@ function showItem(itemID) {
             item = JSON.parse(result);
             console.log(item);
             $('.results').addClass("invisible");
-            $('#item-heading').html(`${item.name}`);
+            $('#item-heading').html(`${item.itemName}`);
             $('#item-image').html(`<img src="../public/img/${item.image}" alt="couldnt load image">`);
-            $('#item-attributes').html(`Id: ${item.itemID}<br>Name: ${item.name}<br>Description: ${item.description}<br>Location: ${item.locationID}`);
+            $('#item-attributes').html(`Id: ${item.itemID}<br>Name: ${item.itemName}<br>Description: ${item.description}<br>Location: ${item.locationID}`);
         }
     });
 }
@@ -56,7 +56,7 @@ function showLocation(locationID) {
         url: '/locationdata?locationID=' + locationID,
         success: function(result) {
             location = JSON.parse(result);
-            $('#thing-heading').html(`${location.name}`);
+            $('#thing-heading').html(`${location.locationName}`);
             $('#thing-image').html(`<img src="../public/img/${item.image}" alt="couldnt load image">`);
             $('#thing-attributes').html(`Id: ${location.locationID}<br>Name: ${location.name}<br>Description: ${location.description}`);
         }
