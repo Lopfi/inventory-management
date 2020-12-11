@@ -14,10 +14,11 @@ let db = new sqlite3.Database("./db/content.db", sqlite3.OPEN_READWRITE | sqlite
 
 db.run(`
 CREATE TABLE IF NOT EXISTS items (
-	  item_id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
+	itemID INTEGER PRIMARY KEY,
+    itemName TEXT NOT NULL,
     description TEXT,
-    location_id INTEGER NOT NULL,
+    locationID INTEGER NOT NULL,
+    count INTEGER NOT NULL,
     image TEXT
     );`, function(err) {
     if (err) {
@@ -28,8 +29,8 @@ CREATE TABLE IF NOT EXISTS items (
 
 db.run(`
 CREATE TABLE IF NOT EXISTS locations (
-    location_id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
+    locationID INTEGER PRIMARY KEY,
+    locationName TEXT NOT NULL,
     description TEXT,
     image TEXT
     );`, function(err) {
@@ -46,7 +47,7 @@ app.use(express.json());
 
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, '/content', 'index.html')));
 app.get("/add", (req, res) => res.sendFile(path.join(__dirname, '/content', 'add.html')));
-app.get("/del", (req, res) => res.sendFile(path.join(__dirname, '/content', 'delete.html')));
+app.get("/scan", (req, res) => res.sendFile(path.join(__dirname, '/content', 'scanner.html')));
 
 app.get("/items", (req, res) => {
   let limit = req.query.limit;
@@ -68,11 +69,11 @@ app.get("/items", (req, res) => {
 });
 
 app.get("/items", (req, res) => {
-  let location_id = req.query.location_id;
+  let locationID = req.query.locationID;
   let sql = `SELECT *
            FROM items
-           WHERE location_id = ?`;
-  db.all(sql, [location_id], (err, rows) => {
+           WHERE locationID = ?`;
+  db.all(sql, [locationID], (err, rows) => {
     if (err) {
       console.log("Error: " + err.message);
     } else {
@@ -84,6 +85,27 @@ app.get("/items", (req, res) => {
     }
   });
 });
+
+app.get("/itemlist", (req, res) => {
+  let limit = req.query.limit;
+  let offset = req.query.offset;
+  let sql = `SELECT items.itemID, items.itemName, items.image, locations.locationID, locations.locationName
+           FROM items, locations
+           WHERE items.locationID = locations.locationID
+           LIMIT ? OFFSET ?`;
+  db.all(sql, [limit, offset], (err, rows) => {
+    if (err) {
+      console.log("Error: " + err.message);
+    } else {
+      let response = [];
+      rows.forEach((row) => {
+        response.push(row);
+      });
+      res.send(JSON.stringify(response));
+    }
+  });
+});
+
 
 app.get("/locations", (req, res) => {
   let limit = req.query.limit;
@@ -105,11 +127,11 @@ app.get("/locations", (req, res) => {
 });
 
 app.get("/itemdata", (req, res) => {  //maybe rename to /item
-  let item_id = req.query.id;
+  let itemID = req.query.itemID;
   let sql = `SELECT *
            FROM items
-           WHERE item_id = ?`;
-  db.get(sql, [item_id], (err, row) => {
+           WHERE itemID = ?`;
+  db.get(sql, [itemID], (err, row) => {
     if (err) {
       console.log("Error: " + err.message);
     } else {
@@ -119,11 +141,11 @@ app.get("/itemdata", (req, res) => {  //maybe rename to /item
 });
 
 app.get("/locationdata", (req, res) => {  //maybe rename to /location
-  let location_id = req.query.id;
+  let locationID = req.query.locationID;
   let sql = `SELECT *
-           FROM locatoins
-           WHERE  location_id = ?`;
-  db.get(sql, [location_id], (err, row) => {
+           FROM locations
+           WHERE  locationID = ?`;
+  db.get(sql, [locationID], (err, row) => {
     if (err) {
       console.log("Error: " + err.message);
     } else {
@@ -133,33 +155,33 @@ app.get("/locationdata", (req, res) => {  //maybe rename to /location
 });
 
 app.post("/delitem", (req, res) => {
-  let itemid = req.body.id;
-  let sql = `DELETE FROM items WHERE itemid = ?`;
-  db.run(sql, [itemid]);
+  let itemID = req.body.itemID;
+  let sql = `DELETE FROM items WHERE itemID = ?`;
+  db.run(sql, [itemID]);
 });
 
 app.post("/dellocation", (req, res) => {
-  let locationid = req.body.id;
-  let sql = `DELETE FROM locations WHERE locationid = ?`;
-  db.run(sql, [locationid]);
+  let locationID = req.body.locationID;
+  let sql = `DELETE FROM locations WHERE locationID = ?`;
+  db.run(sql, [locationID]);
 });
 
 app.post("/additem", (req, res) => {
   console.log()
-  let name = req.body.name;
+  let itemName = req.body.itemName;
   let description = req.body.description;
-  let locationid = req.body.location_id;
+  let locationID = req.body.locationID;
   let image = req.body.image;
-  let sql = `INSERT INTO items (name, description, location_id, image) VALUES(?,?,?,?)`;
-  db.run(sql, [name, description, locationid, image]);
+  let sql = `INSERT INTO items (itemName, description, locationID, image) VALUES(?,?,?,?)`;
+  db.run(sql, [itemName, description, locationID, image]);
 });
 
 app.post("/addlocation", (req, res) => {
-  let name = req.body.name;
+  let locationName = req.body.locationName;
   let description = req.body.description;
   let image = req.body.image;
-  let sql = `INSERT INTO locations (name, description, image) VALUES(?,?,?,?)`;
-  db.run(sql, [name, description, image]);
+  let sql = `INSERT INTO locations (locationName, description, image) VALUES(?,?,?)`;
+  db.run(sql, [locationName, description, image]);
 });
 
 app.get("*", (req, res) => res.status(404).send("404"));

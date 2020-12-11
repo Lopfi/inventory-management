@@ -1,4 +1,26 @@
-//id, name, description, location, image
+
+$('#items-btn').click(function (){
+    $.ajax({
+        url: '/itemlist?limit=10&offset=0',
+        success: function(result){
+            let items = JSON.parse(result);
+            console.log(result);
+            $('.active').removeClass("active");
+            $('#items-btn').addClass("active");
+            $('#result-count').html(`found ${items.length} items`);
+            $.each(items, function (i, item) {
+                $('#items').append(`
+                    <li class="item" id=${item.itemID}" onclick="showItem(${item.itemID})">
+                        <span class="item-name">${item.itemName}<br></span>
+                        <span class="item-location">${item.locationName}</span>
+                    </li>
+                `);
+            });
+        }
+    });
+    return false;//Returning false prevents the event from continuing up the chain
+});
+
 $('#locations-btn').click(function (){
     $.ajax({
         url: '/locations?limit=10&offset=0',
@@ -7,54 +29,36 @@ $('#locations-btn').click(function (){
             console.log(result);
             $('#result-count').html(`found ${locations.length} locations`);
             $.each(locations, function (i, location) {
-                $('#items').append(`<li class="location" onclick="showLocation(${location.location_id})">${location.name}
-                <br>${location.location_id}</li>`);
+                $('#items').append(`<li class="location" onclick="showLocation(${location.locationID})">${location.name}
+                <br>${location.locationID}</li>`);
             });
         }
     });
     return false;//Returning false prevents the event from continuing up the chain
 });
 
-$('#items-btn').click(function (){
+function showItem(itemID) {
     $.ajax({
-        url: '/items?limit=10&offset=0',
-        success: function(result){
-            let items = JSON.parse(result);
-            console.log(result);
-            $('#items-btn').addClass("active");
-            $('#result-count').html(`found ${items.length} items`);
-            $.each(items, function (i, item) {
-                $('#items').append(`<li class="item" id=${item.item_id}" onclick="showItem(${item.item_id})">${item.name}
-                <br>${item.location_id}</li>`);
-            });
-        }
-    });
-    return false;//Returning false prevents the event from continuing up the chain
-});
-
-function showItem(id) {
-    $.ajax({
-        url: '/itemdata?id=' + id,
+        url: '/itemdata?itemID=' + itemID,
         success: function(result) {
             item = JSON.parse(result);
             console.log(item);
-            $('.results')[0].style.display = "none";
-            $('#back-btn')[0].style.display = "block";
+            $('.results').addClass("invisible");
             $('#item-heading').html(`${item.name}`);
             $('#item-image').html(`<img src="../public/img/${item.image}" alt="couldnt load image">`);
-            $('#item-attributes').html(`Id: ${item.item_id}<br>Name: ${item.name}<br>Description: ${item.description}<br>Location: ${item.location_id}`);
+            $('#item-attributes').html(`Id: ${item.itemID}<br>Name: ${item.name}<br>Description: ${item.description}<br>Location: ${item.locationID}`);
         }
     });
 }
 
-function showLocation(id) {    
+function showLocation(locationID) {
     $.ajax({
-        url: '/locationdata?id=' + id,
+        url: '/locationdata?locationID=' + locationID,
         success: function(result) {
             location = JSON.parse(result);
             $('#thing-heading').html(`${location.name}`);
             $('#thing-image').html(`<img src="../public/img/${item.image}" alt="couldnt load image">`);
-            $('#thing-attributes').html(`Id: ${location.location_id}<br>Name: ${location.name}<br>Description: ${location.description}`);
+            $('#thing-attributes').html(`Id: ${location.locationID}<br>Name: ${location.name}<br>Description: ${location.description}`);
         }
     });
 }

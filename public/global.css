@@ -2,6 +2,18 @@ body{
     background: white;
 }
 
+.results {
+    padding-top: 13px;
+}
+
+#result-count {
+    color: #808080;
+}
+
+.item-name {
+    font-size: larger;
+}
+
 .navbar {
     position: fixed;
     top: 0;
@@ -20,7 +32,6 @@ body{
 }
 
 .navbar-element a {
-    display: block;
     color: white;
     text-align: center;
     padding: 14px 16px;
@@ -33,4 +44,12 @@ body{
 
 .active {
     background-color: #4CAF50;
+}
+
+.invisible {
+    display: none;
+}
+
+:not(.invisible) {
+    display: block;
 }
