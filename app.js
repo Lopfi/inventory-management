@@ -52,9 +52,11 @@ app.get("/scan", (req, res) => res.sendFile(path.join(__dirname, '/content', 'sc
 app.get("/itemlist", (req, res) => {
   let limit = req.query.limit;
   let offset = req.query.offset;
-  let sql = `SELECT items.itemID, items.itemName, items.image, locations.locationID, locations.locationName
-           FROM items, locations
-           WHERE items.locationID = locations.locationID
+  let sql = `
+           SELECT items.itemID, items.itemName, items.image, locations.locationID, locations.locationName
+           FROM items
+           INNER JOIN locations
+           ON items.locationID = locations.locationID
            LIMIT ? OFFSET ?`;
   db.all(sql, [limit, offset], (err, rows) => {
     if (err) {
@@ -169,3 +171,9 @@ app.get("*", (req, res) => res.status(404).send("404"));
 app.listen(80, () => {
   console.log("App listening on 80");
 });
+
+/*SELECT locations.locationName, count(items.itemID)
+FROM locations
+INNER JOIN items
+ON locations.locationID = items.locationID
+GROUP BY locations.locationName*/

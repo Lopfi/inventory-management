@@ -1,40 +1,55 @@
+$('#home-btn').addClass("active");
+
 
 $('#items-btn').click(function (){
-    $.ajax({
-        url: '/itemlist?limit=10&offset=0',
-        success: function(result){
-            let items = JSON.parse(result);
-            console.log(result);
-            $('.active').removeClass("active");
-            $('#items-btn').addClass("active");
-            $('#result-count').html(`found ${items.length} items`);
-            $.each(items, function (i, item) {
-                $('#items').append(`
+    if ($(this).hasClass("active")) return false;
+    else {
+        $.ajax({
+            url: '/itemlist?limit=10&offset=0',
+            success: function (result) {
+                let items = JSON.parse(result);
+                console.log(result);
+                $('.active').removeClass("active");
+                $('#items-btn').addClass("active");
+                $('#result-count').html(`found ${items.length} items`);
+                $('#result-list').empty();
+                $.each(items, function (i, item) {
+                    $('#result-list').append(`
                     <li class="item" id=${item.itemID}" onclick="showItem(${item.itemID})">
                         <span class="item-name">${item.itemName}<br></span>
                         <span class="item-location">${item.locationName}</span>
                     </li>
                 `);
-            });
-        }
-    });
-    return false;//Returning false prevents the event from continuing up the chain
+                });
+            }
+        });
+        return false;//Returning false prevents the event from continuing up the chain
+    }
 });
 
 $('#locations-btn').click(function (){
-    $.ajax({
-        url: '/locationlist?limit=10&offset=0',
-        success: function(result){
-            let locations = JSON.parse(result);
-            console.log(result);
-            $('#result-count').html(`found ${locations.length} locations`);
-            $.each(locations, function (i, location) {
-                $('#items').append(`<li class="location" onclick="showLocation(${location.locationID})">${location.locationName}
-                <br>${location.locationID}</li>`);
-            });
-        }
-    });
-    return false;//Returning false prevents the event from continuing up the chain
+    if ($(this).hasClass("active")) return false;
+    else {
+        $.ajax({
+            url: '/locationlist?limit=10&offset=0',
+            success: function (result) {
+                let locations = JSON.parse(result);
+                console.log(result);
+                $('.active').removeClass("active");
+                $('#locations-btn').addClass("active");
+                $('#result-count').html(`found ${locations.length} locations`);
+                $('#result-list').empty();
+                $.each(locations, function (i, location) {
+                    $('#result-list').append(`
+                    <li class="location" onclick="showLocation(${location.locationID})">
+                    ${location.locationName}<br>
+                    ${location.locationID}
+                    </li>`);
+                });
+            }
+        });
+        return false;//Returning false prevents the event from continuing up the chain
+    }
 });
 
 function showItem(itemID) {
