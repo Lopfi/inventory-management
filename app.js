@@ -139,16 +139,27 @@ app.get("/locationdata", (req, res) => {  //maybe rename to /location
   });
 });
 
-app.delete("/delete", (req, res) => {
-    let table = req.body.table;
-    let id = req.body.id;
-    let sql = `DELETE FROM` + table + `WHERE ` + table + `ID` + ` = ?`;
-    db.run(sql, [id], (err) => {
+app.delete("/delitem", (req, res) => {
+    let itemID = req.body.itemID;
+    let sql = `DELETE FROM items WHERE itemID = ?`;
+    db.run(sql, [itemID], (err) => {
         if (err) {
             console.log("Error: " + err.message);
             res.status(500).send("database error")
         }
-        else res.status(200).send("successfully deleted from " + table);
+        else res.status(200).send("successfully deleted from items");
+    });
+});
+
+app.delete("/dellocation", (req, res) => {
+    let locationID = req.body.locationID;
+    let sql = `DELETE FROM items WHERE itemID = ?`;
+    db.run(sql, [locationID], (err) => {
+        if (err) {
+            console.log("Error: " + err.message);
+            res.status(500).send("database error")
+        }
+        else res.status(200).send("successfully deleted from locations");
     });
 });
 
