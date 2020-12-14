@@ -22,7 +22,7 @@ body{
     display: inline;
     list-style-type: none;
     margin: 0px;
-    padding: 0px;
+    padding: 10px;
     overflow: hidden;
     background-color: #2f2f2f;
 }
@@ -44,12 +44,4 @@ body{
 
 .active {
     background-color: #4CAF50;
-}
-
-.invisible {
-    display: none;
-}
-
-:not(.invisible) {
-    display: block;
 }

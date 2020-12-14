@@ -139,7 +139,7 @@ app.get("/locationdata", (req, res) => {  //maybe rename to /location
   });
 });
 
-app.post("/delitem", (req, res) => {
+app.delete("/delitem", (req, res) => {
   let itemID = req.body.itemID;
   let sql = `DELETE FROM items WHERE itemID = ?`;
   db.run(sql, [itemID], (err) => {
@@ -147,15 +147,32 @@ app.post("/delitem", (req, res) => {
   });
 });
 
-app.post("/dellocation", (req, res) => {
+app.delete("/dellocation", (req, res) => {
   let locationID = req.body.locationID;
   let sql = `DELETE FROM locations WHERE locationID = ?`;
   db.run(sql, [locationID], (err) => {
-    if (err) console.log("Error: " + err.message);
+      if (err) {
+      console.log("Error: " + err.message);
+      res.status(500).send("database error")
+      }
+      else res.status(200).send("successfully deleted from database");
   });
 });
 
-app.post("/additem", (req, res) => {
+app.delete("/delete", (req, res) => {
+    let table = req.body.table;
+    let id = req.body.id;
+    let sql = `DELETE FROM` + table + `WHERE ` + table + `ID` + ` = ?`;
+    db.run(sql, [id], (err) => {
+        if (err) {
+            console.log("Error: " + err.message);
+            res.status(500).send("database error")
+        }
+        else res.status(200).send("successfully deleted from " + table);
+    });
+});
+
+app.put("/additem", (req, res) => {
   console.log()
   let itemName = req.body.itemName;
   let description = req.body.description;
@@ -163,17 +180,26 @@ app.post("/additem", (req, res) => {
   let image = req.body.image;
   let sql = `INSERT INTO items (itemName, description, locationID, image) VALUES(?,?,?,?)`;
   db.run(sql, [itemName, description, locationID, image], (err) => {
-    if (err) console.log("Error: " + err.message);
+      if (err) {
+          console.log("Error: " + err.message);
+          res.status(500).send("database error")
+      }
+      else res.status(200).send("successfully added to database");
   });
 });
 
-app.post("/addlocation", (req, res) => {
+app.put("/addlocation", (req, res) => {
+  console.log(req.body);
   let locationName = req.body.locationName;
   let description = req.body.description;
   let image = req.body.image;
   let sql = `INSERT INTO locations (locationName, description, image) VALUES(?,?,?)`;
   db.run(sql, [locationName, description, image], (err) => {
-    if (err) console.log("Error: " + err.message);
+    if (err) {
+        console.log("Error: " + err.message);
+        res.status(500).send("database error")
+    }
+    else res.status(200).send("successfully added to database");
   });
 });
 
