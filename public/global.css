@@ -1,17 +1,27 @@
+* {margin: 0; padding: 0;}
+
 body{
     background: white;
 }
 
 .results {
-    padding-top: 13px;
+    padding-top: 40px;
 }
 
-#result-count {
-    color: #808080;
+#item {
+    padding-top: 40px;
+    padding-left: 20px;
+    float: left;
+    width: 50%;
 }
 
-.item-name {
+#item-name {
     font-size: larger;
+}
+
+#location {
+    float: left;
+    width: 50%;
 }
 
 .navbar {
@@ -22,12 +32,16 @@ body{
     display: inline;
     list-style-type: none;
     margin: 0px;
-    padding: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     overflow: hidden;
     background-color: #2f2f2f;
 }
 
 .navbar-element {
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
     float: left;
 }
 

@@ -1,5 +1,7 @@
 $("#home-btn").addClass("active");
 $("#add-menu").hide();
+$("#item").hide();
+
 $("#type").change(function(){
     let selectedType = $(this).children("option:selected").val();
     $("#add-form").attr("action", "/add" + selectedType);
@@ -39,9 +41,10 @@ $("#items-btn").click(function (){
                 $("#result-list").empty();
                 $.each(items, function (i, item) {
                     $("#result-list").append(`
-                    <li class="item" id=${item.itemID}" onclick="showItem(${item.itemID})">
-                        <span class="item-name">${item.itemName}<br></span>
-                        <span class="item-location">${item.locationName}</span>
+                    <li id="${item.itemID}" onclick="showItem(${item.itemID})">
+                        <img id="item-image" src="${item.image}">
+                        <span id="item-name">${item.itemName}<br></span>
+                        <span id="item-location">${item.locationName}</span>
                     </li>
                 `);
                 });
@@ -95,7 +98,7 @@ function showItem(itemID) {
         success: function(result) {
             let item = JSON.parse(result);
             console.log(item);
-            $(".results").addClass("invisible");
+            $(".results").hide();
             $("#item-heading").html(`${item.itemName}`);
             $("#item-image").html(`<img src="../public/img/${item.image}" alt="couldnt load image">`);
             $("#item-attributes").html(`Id: ${item.itemID}<br>Name: ${item.itemName}<br>Description: ${item.description}<br>Location: ${item.locationID}`);

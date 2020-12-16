@@ -1,0 +1,32 @@
+#result-count {
+    color: #808080;
+}
+
+#result-list {
+    padding-left: 20px;
+    list-style-type: none;
+    width: 500px;
+}
+
+#result-list #item-name {
+    font: bold 20px/1.5 Helvetica, Verdana, sans-serif;
+}
+
+#result-list img {
+    float: left;
+    margin: 0 15px 0 0;
+}
+
+#result-list li #item-location {
+    font: 200 12px/1.5 Georgia, Times New Roman, serif;
+}
+
+#result-list li {
+    padding: 10px;
+    overflow: auto;
+}
+
+#result-list li:hover {
+    background: #eee;
+    cursor: pointer;
+}
