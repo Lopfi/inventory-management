@@ -1,6 +1,5 @@
 $("#home-btn").addClass("active");
-$("#add-menu").hide();
-$("#item").hide();
+$("#add-menu, #item, .navbar-bottom, .popup").hide();
 
 $("#type").change(function(){
     let selectedType = $(this).children("option:selected").val();
@@ -26,7 +25,11 @@ $("#add-form").submit(function(evt) {
 
 
 $("#items-btn").click(function (){
-    if ($(this).hasClass("active")) return false;
+    if ($(this).hasClass("active")) {
+        $("#item, #add-menu, .navbar-bottom").hide();
+        $("#results").show();
+        return false;
+    }
     else {
         $("#results").show();
         $("#add-menu").hide();
@@ -55,10 +58,14 @@ $("#items-btn").click(function (){
 });
 
 $("#locations-btn").click(function (){
-    if ($(this).hasClass("active")) return false;
+    if ($(this).hasClass("active")) {
+        $("#location, #add-menu, .navbar-bottom").hide();
+        $("#results").show();
+        return false;
+    }
     else {
         $("#results").show();
-        $("#add-menu").hide();
+        $("#add-menu, .navbar-bottom").hide();
         $.ajax({
             url: "/locationlist?limit=10&offset=0",
             success: function (result) {
@@ -92,16 +99,41 @@ $("#add-btn").click(function (){
     }
 });
 
+$("#delete-btn").click(function (){
+    $("#sure").show();
+    $(".popup-no").click(function () {
+        $("#sure").hide();
+        return false;
+    });
+    $(".popup-yes").click(function () {
+        $.ajax({
+            url: "/delitem",
+            type: "DELETE",
+            dataType: text,
+            success: function (result) {
+                console.log(result);
+            }
+        });
+        return false;
+    });
+});
+
 function showItem(itemID) {
     $.ajax({
         url: "/itemdata?itemID=" + itemID,
         success: function(result) {
             let item = JSON.parse(result);
             console.log(item);
-            $(".results").hide();
+            $("#results").hide();
+            $("#item, .navbar-bottom").show();
             $("#item-heading").html(`${item.itemName}`);
-            $("#item-image").html(`<img src="../public/img/${item.image}" alt="couldnt load image">`);
-            $("#item-attributes").html(`Id: ${item.itemID}<br>Name: ${item.itemName}<br>Description: ${item.description}<br>Location: ${item.locationID}`);
+            $("#item-image").html(`<img src="../public/img/${item.image}" alt="couldn't load image">`);
+            $("#item-attributes").html(`
+                Id: ${item.itemID}<br>
+                Name: ${item.itemName}<br>
+                Description: ${item.description}<br>
+                Amount: ${item.count}<br>
+                Location: ${item.locationID}`);
         }
     });
 
@@ -113,7 +145,7 @@ function showLocation(locationID) {
         success: function(result) {
             let location = JSON.parse(result);
             $("#thing-heading").html(`${location.locationName}`);
-            $("#thing-image").html(`<img src="../public/img/${item.image}" alt="couldnt load image">`);
+            $("#thing-image").html(`<img src="../public/img/${item.image}" alt="couldn't load image">`);
             $("#thing-attributes").html(`Id: ${location.locationID}<br>Name: ${location.name}<br>Description: ${location.description}`);
         }
     });

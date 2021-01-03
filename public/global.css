@@ -1,4 +1,4 @@
-* {margin: 0; padding: 0;}
+* {margin: 0; padding: 0; font-family: Sans-serif;}
 
 body{
     background: white;
@@ -29,6 +29,19 @@ body{
     top: 0;
     left: 0;
     width: 100%;
+    display: inline;
+    list-style-type: none;
+    margin: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    overflow: hidden;
+    background-color: #2f2f2f;
+}
+
+.navbar-bottom {
+    position: fixed;
+    left: 0;
+    bottom: 0;
     display: inline;
     list-style-type: none;
     margin: 0px;

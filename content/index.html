@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/global.css">
     <link rel="stylesheet" href="/form.css">
     <link rel="stylesheet" href="/list.css">
+    <link rel="stylesheet" href="/popup.css">
     <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="/index.js" defer></script>
@@ -28,14 +29,13 @@
         <h1 id="item-heading"></h1>
         <div id="item-image"></div>
         <p id="item-attributes"></p>
-        <button id="back-btn" >back</button>
     </div>
     <div id="location">
         <h1 id="location-heading"></h1>
         <div id="location-image"></div>
         <p id="location-attributes"></p>
     </div>
-    <div class="invisible" id="add-menu" class="form">
+    <div id="add-menu" class="form">
         <div id="add-res"></div>
         <div class="form-heading">Fill out  and submit to add something to the database</div>
         <select id="type">
@@ -53,6 +53,21 @@
             <input type="file" id="image" name="image" value=""><br><br>
             <input type="submit" value="Add">
         </form>
+    </div>
+    <div class="bottom-float">
+        <ul class="navbar-bottom">
+            <li class="navbar-element"><a href="#" id="back-btn" class="navbar-button" class="active">Back</a></li>
+            <li class="navbar-element"><a href="#" id="delete-btn" class="navbar-button">Delete</a></li>
+            <li class="navbar-element"><a href="#" id="edit-btn" class="navbar-button">Edit</a></li>
+        </ul>
+    </div>
+    <div class="popup" id="sure">
+        <span class="helper"></span>
+        <div>
+            <p>Are you sure?</p>
+            <button class="popup-button" class="popup-yes">Yes</button>
+            <button class="popup-button" class="popup-no" >No</button>
+        </div>
     </div>
 </body>
 </html>
