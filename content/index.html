@@ -15,10 +15,16 @@
     <div class="top-float">
         <ul class="navbar">
             <li class="navbar-element"><a href="/" id="home-btn" class="navbar-button" class="active">Home</a></li>
-            <li class="navbar-element"><a href="#" id="items-btn" class="navbar-button">Items</a></li>
-            <li class="navbar-element"><a href="#" id="locations-btn" class="navbar-button">Locations</a></li>
-            <li class="navbar-element"><a href="#" id="add-btn" class="navbar-button">Add</a></li>
-            <li class="navbar-element"><a href="#" id="scan-btn" class="navbar-button">Scan</a></li>
+            <li class="navbar-element"><a onclick=showItems(); id="items-btn" class="navbar-button">Items</a></li>
+            <li class="navbar-element"><a onclick=showLocations(); id="locations-btn" class="navbar-button">Locations</a></li>
+            <li class="navbar-element">
+                <a id="add-btn" class="navbar-button">Add</a>
+                <div class="dropdown-content">
+                    <a class="navbar-button" id="add-btn-item" onclick=showAddMenu(true);>Item</a>
+                    <a class="navbar-button" id="add-btn-location" onclick=showAddMenu(false);>Location</a>
+                </div>
+            </li>
+            <li class="navbar-element"><a  id="scan-btn" class="navbar-button">Scan</a></li>
         </ul>
     </div>
     <div class="results" id="results">
@@ -47,6 +53,8 @@
             <input type="text" id="name" name="itemName" value=""><br>
             <label for="Description"><span>Description </span></label><br>
             <input type="text" id="description" name="description" value=""><br>
+            <label for="amount" class="amount-field"><span>Amount</span></label><br>
+            <input type="number" class="amount-field" id="amount" name="amount" value=1><br>
             <label for="locationid" class="location-field"><span>Location</span></label><br>
             <input type="text" class="location-field" id="locationid" name="locationID" value=""><br>
             <label for="Image"><span>Image</span></label><br>
@@ -65,8 +73,8 @@
         <span class="helper"></span>
         <div>
             <p>Are you sure?</p>
-            <button class="popup-button" class="popup-yes">Yes</button>
-            <button class="popup-button" class="popup-no" >No</button>
+            <button class="popup-button" id="popup-yes">Yes</button>
+            <button class="popup-button" id="popup-no" >No</button>
         </div>
     </div>
 </body>
