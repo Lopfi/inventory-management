@@ -1,20 +1,6 @@
 $("#home-btn").addClass("active");
 $("#add-menu, #item, .navbar-bottom, .popup").hide();
 
-$("#type").change(function(){
-    let selectedType = $(this).children("option:selected").val();
-    $("#add-form").attr("action", "/add" + selectedType);
-    $("#name").attr("name", selectedType + "Name")
-    if (selectedType == "location") {
-        $(".location-field").hide();
-        $(".amount-field").hide();
-    }
-    else {
-        $(".location-field").show();
-        $(".amount-field").show();
-    }
-});
-
 $("#add-form").submit(function(evt) {
     evt.preventDefault();
     $.ajax({
@@ -24,7 +10,7 @@ $("#add-form").submit(function(evt) {
     })
         .done(function (result){
             alert(result.message);
-            showAddMenu();
+            showAddMenu($("#add-form").attr('action') == "/additem");
         })
     return false; // To avoid actual submission of the form
 });
@@ -83,9 +69,19 @@ function showLocations() {
     return false;//Returning false prevents the event from continuing up the chain
 };
 
-function showAddMenu() {
+function showAddMenu(type) {
+    if (type){
+        $(".location-field, .amount-field").show();
+        $("#add-form").attr("action", "/additem");
+        $("#name").attr("name", "itemName")
+    }
+    else {
+        $(".location-field, .amount-field").hide();
+        $("#add-form").attr("action", "/addlocation");
+        $("#name").attr("name", "locationName")
+    }
     $(".active").removeClass("active");
-    $(this).addClass("active");
+    $("#add-btn").addClass("active");
     $(".results").hide();
     $("#add-menu").show();
     $("#add-popup").hide();
