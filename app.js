@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS items (
     itemName TEXT NOT NULL,
     description TEXT,
     locationID INTEGER NOT NULL,
-    count INTEGER NOT NULL,
+    amount INTEGER NOT NULL,
     image TEXT
     );`, function(err) {
     if (err) {
@@ -61,12 +61,14 @@ app.get("/itemlist", (req, res) => {
   db.all(sql, [limit, offset], (err, rows) => {
     if (err) {
       console.log("Error: " + err.message);
+      res.status(500).json({message:"database error"})
     } else {
       let response = [];
       rows.forEach((row) => {
         response.push(row);
       });
-      res.send(JSON.stringify(response));
+      console.log(response);
+      res.status(200).json(response);
     }
   });
 });
@@ -83,12 +85,13 @@ app.get("/locationlist", (req, res) => {
   db.all(sql, [limit, offset], (err, rows) => {
     if (err) {
       console.log("Error: " + err.message);
+      res.status(500).json({message:"database error"})
     } else {
       let response = [];
       rows.forEach((row) => {
         response.push(row);
       });
-      res.send(JSON.stringify(response));
+      res.status(200).json(response);
     }
   });
 });
@@ -101,12 +104,13 @@ app.get("/items", (req, res) => {
   db.all(sql, [locationID], (err, rows) => {
     if (err) {
       console.log("Error: " + err.message);
+      res.status(500).json({message:"database error"})
     } else {
       let response = [];
       rows.forEach((row) => {
         response.push(row);
       });
-      res.send(JSON.stringify(response));
+      res.status(200).json(response);
     }
   });
 });
@@ -119,8 +123,9 @@ app.get("/itemdata", (req, res) => {  //maybe rename to /item
   db.get(sql, [itemID], (err, row) => {
     if (err) {
       console.log("Error: " + err.message);
+      res.status(500).json({message:"database error"})
     } else {
-      res.send(JSON.stringify(row));
+      res.status(200).json(row);
     }
   });
 });
@@ -133,21 +138,23 @@ app.get("/locationdata", (req, res) => {  //maybe rename to /location
   db.get(sql, [locationID], (err, row) => {
     if (err) {
       console.log("Error: " + err.message);
+      res.status(500).json({message:"database error"})
     } else {
-      res.send(JSON.stringify(row));
+      res.status(200).json(row);
     }
   });
 });
 
 app.delete("/delitem", (req, res) => {
     let itemID = req.body.itemID;
+    console.log("Deleting item " + itemID + " from database");
     let sql = `DELETE FROM items WHERE itemID = ?`;
     db.run(sql, [itemID], (err) => {
         if (err) {
             console.log("Error: " + err.message);
-            res.status(500).send("database error")
+            res.status(500).json({message:"database error"})
         }
-        else res.status(200).send("successfully deleted from items");
+        else res.status(200).json({message: "successfully deleted from items"});
     });
 });
 
@@ -157,25 +164,26 @@ app.delete("/dellocation", (req, res) => {
     db.run(sql, [locationID], (err) => {
         if (err) {
             console.log("Error: " + err.message);
-            res.status(500).send("database error")
+            res.status(500).json({message:"database error"})
         }
-        else res.status(200).send("successfully deleted from locations");
+        else res.status(200).json({message: "successfully deleted from locations"});
     });
 });
 
 app.put("/additem", (req, res) => {
-  console.log()
   let itemName = req.body.itemName;
   let description = req.body.description;
+  let amount  = req.body.amount;
   let locationID = req.body.locationID;
   let image = req.body.image;
-  let sql = `INSERT INTO items (itemName, description, locationID, image) VALUES(?,?,?,?)`;
-  db.run(sql, [itemName, description, locationID, image], (err) => {
+  console.log("adding item to database")
+  let sql = `INSERT INTO items (itemName, description, amount, locationID, image) VALUES(?,?,?,?,?)`;
+  db.run(sql, [itemName, description, amount, locationID, image], (err) => {
       if (err) {
           console.log("Error: " + err.message);
-          res.status(500).send("database error")
+          res.status(500).json({message:"database error"})
       }
-      else res.status(200).send("successfully added to database");
+      else res.status(200).json({message:"successfully added item to database"});
   });
 });
 
@@ -188,9 +196,9 @@ app.put("/addlocation", (req, res) => {
   db.run(sql, [locationName, description, image], (err) => {
     if (err) {
         console.log("Error: " + err.message);
-        res.status(500).send("database error")
+        res.status(500).json({message:"database error"})
     }
-    else res.status(200).send("successfully added to database");
+    else res.status(200).json({message:"successfully added location to database"});
   });
 });
 
