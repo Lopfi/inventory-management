@@ -41,7 +41,7 @@ $("#delete-btn").click(function() {
 
 function showLocations() {
     $("#results").show();
-    $("#add-menu, .navbar-bottom").hide();
+    $("#add-menu, .navbar-bottom, #item, #location").hide();
     $.ajax({
         url: "/locationlist",
         type: "GET",
@@ -82,14 +82,14 @@ function showAddMenu(type) {
     }
     $(".active").removeClass("active");
     $("#add-btn").addClass("active");
-    $(".results").hide();
+    $(".results, #item, #location").hide();
     $("#add-menu").show();
     $("#add-popup").hide();
 }
 
 function showItems() {
     console.log("show items");
-    $("#item, #add-menu, .navbar-bottom, .popup").hide();
+    $("#item, #location, #add-menu, .navbar-bottom, .popup").hide();
     $("#results").show();
     $.ajax({
         url: "/itemlist",
@@ -152,9 +152,14 @@ function showLocation(locationID) {
         data: {itemID: locationID},
     })
         .done(function(result) {
-        $("#thing-heading").html(`${result.locationName}`);
-        $("#thing-image").html(`<img src="../public/img/${result.image}" alt="couldn't load image">`);
-        $("#thing-attributes").html(`Id: ${result.locationID}<br>Name: ${result.name}<br>Description: ${result.description}`);
+        $("#results, #item, #location").hide();
+        $("#location, .navbar-bottom").show();
+        $("#location-heading").html(`${result.locationName}`);
+        $("#location-image").html(`<img src="../public/img/${result.image}" alt="couldn't load image">`);
+        $("#location-attributes").html(`
+            Id: ${result.locationID}<br>
+            Name: ${result.name}<br>
+            Description: ${result.description}`);
         })
         .fail(function(result){
             alert(result.message);

@@ -67,7 +67,6 @@ app.get("/itemlist", (req, res) => {
       rows.forEach((row) => {
         response.push(row);
       });
-      console.log(response);
       res.status(200).json(response);
     }
   });
@@ -140,7 +139,9 @@ app.get("/locationdata", (req, res) => {  //maybe rename to /location
       console.log("Error: " + err.message);
       res.status(500).json({message:"database error"})
     } else {
-      res.status(200).json(row);
+        let response = []
+        response.push(row);
+        res.status(200).json(response);
     }
   });
 });
@@ -188,7 +189,6 @@ app.put("/additem", (req, res) => {
 });
 
 app.put("/addlocation", (req, res) => {
-  console.log(req.body);
   let locationName = req.body.locationName;
   let description = req.body.description;
   let image = req.body.image;

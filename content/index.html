@@ -16,12 +16,12 @@
     <div class="top-float">
         <ul class="navbar">
             <li class="navbar-element"><a href="/" id="home-btn" class="navbar-button" class="active">Home</a></li>
-            <li class="navbar-element"><a onclick=showItems(); id="items-btn" class="navbar-button">Items</a></li>
-            <li class="navbar-element"><a onclick=showLocations(); id="locations-btn" class="navbar-button">Locations</a></li>
+            <li class="navbar-element"><a onclick="showItems()" id="items-btn" class="navbar-button">Items</a></li>
+            <li class="navbar-element"><a onclick="showLocations()" id="locations-btn" class="navbar-button">Locations</a></li>
             <li class="navbar-element"><a id="add-btn" class="navbar-button">Add<i class="fa fa-caret-down"></i></a>
                 <ul class="dropdown">
-                    <li class="dropdown-element"><a class="dropdown-button" id="add-btn-item" onclick=showAddMenu(true);>Item</a></li>
-                    <li class="dropdown-element"><a class="dropdown-button" id="add-btn-location" onclick=showAddMenu(false);>Location</a></li>
+                    <li class="dropdown-element"><a class="dropdown-button" id="add-btn-item" onclick="showAddMenu(true)">Item</a></li>
+                    <li class="dropdown-element"><a class="dropdown-button" id="add-btn-location" onclick="showAddMenu(false)">Location</a></li>
                 </ul>
             </li>
             <li class="navbar-element"><a  id="scan-btn" class="navbar-button">Scan</a></li>
@@ -42,7 +42,6 @@
         <p id="location-attributes"></p>
     </div>
     <div id="add-menu" class="form">
-        <div id="add-res"></div>
         <div class="form-heading">Fill out  and submit to add something to the database</div>
         <form action="/additem" method="post" id="add-form" class="form">
             <label for="name"><span class="required">Name </span></label><br>

@@ -1,21 +1,19 @@
-#add-menu {
-    padding-top: 20px;
-}
-
 form {
     max-width: 500px;
-    padding: 20px 12px 10px 20px;
+    margin: 30px 12px 10px 20px;
     font-sizex: 13px;
 }
 .form-heading{
+    margin-top: 50px;
+    margin-left: 20px;
     font-weight: bold;
     margin-bottom: 20px;
-    font-size: 15px;
+    font-size: 17px;
     padding-bottom: 3px;
 }
 form label {
     display: block;
-    margin: 0px 0px 15px 0px;
+    margin: 0px 15px 0px 0px;
 }
 form label > span{
     width: 100px;
