@@ -4,18 +4,18 @@ $("#add-menu, #item, .navbar-bottom, .popup").hide();
 $("#add-form").submit(function(evt) {
     evt.preventDefault();
     $.ajax({
-        url: $("#add-form").attr('action'),
+        url: $("#add-form").attr("action"),
         type: "PUT",
         data: $("#add-form").serialize(),
     })
         .done(function (result){
             alert(result.message);
-            showAddMenu($("#add-form").attr('action') == "/additem");
+            showAddMenu($("#add-form").attr("action") == "/additem");
         })
     return false; // To avoid actual submission of the form
 });
 
-$("#delete-btn").click(function() {
+function deleteThing() {
     $("#sure").show();
     $("#popup-no").click(function() {
         $("#sure").hide();
@@ -37,7 +37,7 @@ $("#delete-btn").click(function() {
                 showItems();
             });
     });
-});
+}
 
 function showLocations() {
     $("#results").show();
@@ -49,7 +49,6 @@ function showLocations() {
         data: {limit: 10, offset:0},
     })
         .done(function(result) {
-            console.log(result);
             $(".active").removeClass("active");
             $("#locations-btn").addClass("active");
             $("#result-count").html(`found ${result.length} locations`);
@@ -127,9 +126,9 @@ function showItem(itemID) {
         data: {itemID: itemID},
     })
         .done(function(result) {
-        console.log(result);
         $("#results").hide();
         $("#item, .navbar-bottom").show();
+        $("#back-btn").attr("onclick", "showItems()");
         $("#item-heading").html(`${result.itemName}`);
         $("#item-image").html(`<img src="../public/img/${result.image}" alt="couldn't load image">`);
         $("#item-attributes").html(`
@@ -154,6 +153,7 @@ function showLocation(locationID) {
         .done(function(result) {
         $("#results, #item, #location").hide();
         $("#location, .navbar-bottom").show();
+        $("#back-btn").attr("onclick", "showLocations()");
         $("#location-heading").html(`${result.locationName}`);
         $("#location-image").html(`<img src="../public/img/${result.image}" alt="couldn't load image">`);
         $("#location-attributes").html(`

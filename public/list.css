@@ -27,6 +27,6 @@
 }
 
 #result-list li:hover {
-    background: #eee;
+    background: #d0d0d0;
     cursor: pointer;
 }
