@@ -3,6 +3,28 @@ const app = express();
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();;
 const bodyParser = require('body-parser');
+const multer = require('multer');
+const uuid = require('uuid').v4;
+
+const imgStorage = multer.diskStorage({
+   destination: (req, file, cb) => {
+       cb(null, 'db/img');
+   },
+   filename: (req, file, cb) => {
+       const { originalname } = file;
+       cb(null, `${uuid()}-${originalname}`);
+   }
+});
+
+var imgPath;
+
+const imgUpload = multer({
+    storage: imgStorage,
+    onFileUploadComplete: function (file) {
+    imgPath = file.path;
+    console.log(file.originalname + ' uploaded to  ' + file.path);
+    }
+});
 
 let db = new sqlite3.Database("./db/content.db", sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
   if (err) {
@@ -41,6 +63,7 @@ console.log(`Initialized locations table.`);
 });
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "db/img")));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -171,12 +194,12 @@ app.delete("/dellocation", (req, res) => {
     });
 });
 
-app.put("/additem", (req, res) => {
+app.put("/additem", imgUpload.single("image"),(req, res) => {
   let itemName = req.body.itemName;
   let description = req.body.description;
   let amount  = req.body.amount;
   let locationID = req.body.locationID;
-  let image = req.body.image;
+  let image = imgPath;
   console.log("adding item to database")
   let sql = `INSERT INTO items (itemName, description, amount, locationID, image) VALUES(?,?,?,?,?)`;
   db.run(sql, [itemName, description, amount, locationID, image], (err) => {
@@ -188,10 +211,10 @@ app.put("/additem", (req, res) => {
   });
 });
 
-app.put("/addlocation", (req, res) => {
+app.put("/addlocation", imgUpload.single("image"), (req, res) => {
   let locationName = req.body.locationName;
   let description = req.body.description;
-  let image = req.body.image;
+  let image = imgPath;
   let sql = `INSERT INTO locations (locationName, description, image) VALUES(?,?,?)`;
   db.run(sql, [locationName, description, image], (err) => {
     if (err) {
