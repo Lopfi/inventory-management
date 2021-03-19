@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const sqlite3 = require('sqlite3').verbose();;
+const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const uuid = require('uuid').v4;
@@ -16,15 +16,7 @@ const imgStorage = multer.diskStorage({
    }
 });
 
-var imgPath;
-
-const imgUpload = multer({
-    storage: imgStorage,
-    onFileUploadComplete: function (file) {
-    imgPath = file.path;
-    console.log(file.originalname + ' uploaded to  ' + file.path);
-    }
-});
+const upload = multer({storage: imgStorage});
 
 let db = new sqlite3.Database("./db/content.db", sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
   if (err) {
@@ -194,12 +186,12 @@ app.delete("/dellocation", (req, res) => {
     });
 });
 
-app.put("/additem", imgUpload.single("image"),(req, res) => {
+app.put("/additem", upload.array("image"),(req, res) => {
   let itemName = req.body.itemName;
   let description = req.body.description;
   let amount  = req.body.amount;
   let locationID = req.body.locationID;
-  let image = imgPath;
+  let image = null;
   console.log("adding item to database")
   let sql = `INSERT INTO items (itemName, description, amount, locationID, image) VALUES(?,?,?,?,?)`;
   db.run(sql, [itemName, description, amount, locationID, image], (err) => {
@@ -207,21 +199,21 @@ app.put("/additem", imgUpload.single("image"),(req, res) => {
           console.log("Error: " + err.message);
           res.status(500).json({message:"database error"})
       }
-      else res.status(200).json({message:"successfully added item to database"});
+      else res.status(200).json({message:"successfully added item to database", uploaded: req.files.length});
   });
 });
 
-app.put("/addlocation", imgUpload.single("image"), (req, res) => {
+app.put("/addlocation", upload.array("image"), (req, res) => {
   let locationName = req.body.locationName;
   let description = req.body.description;
-  let image = imgPath;
+  let image = null;
   let sql = `INSERT INTO locations (locationName, description, image) VALUES(?,?,?)`;
   db.run(sql, [locationName, description, image], (err) => {
     if (err) {
         console.log("Error: " + err.message);
         res.status(500).json({message:"database error"})
     }
-    else res.status(200).json({message:"successfully added location to database"});
+    else res.status(200).json({message:"successfully added location to database", uploaded: req.files.length});
   });
 });
 

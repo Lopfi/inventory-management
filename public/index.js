@@ -87,7 +87,6 @@ function showAddMenu(type) {
 }
 
 function showItems() {
-    console.log("show items");
     $("#item, #location, #add-menu, .navbar-bottom, .popup").hide();
     $("#results").show();
     $.ajax({
@@ -97,7 +96,6 @@ function showItems() {
         data: {limit: 10, offset:0},
     })
         .done(function(result) {
-            console.log(result);
             $(".active").removeClass("active");
             $("#items-btn").addClass("active");
             $("#result-count").html(`found ${result.length} items`);
