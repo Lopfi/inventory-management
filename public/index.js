@@ -1,16 +1,35 @@
 $("#home-btn").addClass("active");
 $("#add-menu, #item, .navbar-bottom, .popup").hide();
 
-$("#add-form").submit(function(evt) {
+const addForm = $("#add-form");
+
+addForm.submit(function(evt) {
     evt.preventDefault();
+
+    const files = document.getElementById("images");
+
+    let formData = addForm.serializeArray();
+    const data = new FormData();
+
+    for(let i =0; i < formData.length; i++) {
+        data.append(formData[i].name, formData[i].value);
+    }
+    for(let i =0; i < files.files.length; i++) {
+        data.append("files", files.files[i]);
+    }
+
+    console.log();
+
     $.ajax({
-        url: $("#add-form").attr("action"),
+        url: `http://localhost${addForm.attr("action")}`,
         type: "PUT",
-        data: $("#add-form").serialize(),
+        data: data,
+        processData: false,
+        contentType: false
     })
         .done(function (result){
             alert(result.message);
-            showAddMenu($("#add-form").attr("action") == "/additem");
+            showAddMenu(addForm.attr("action") === "/additem");
         })
     return false; // To avoid actual submission of the form
 });
@@ -71,12 +90,12 @@ function showLocations() {
 function showAddMenu(type) {
     if (type){
         $(".location-field, .amount-field").show();
-        $("#add-form").attr("action", "/additem");
+        addForm.attr("action", "/additem");
         $("#name").attr("name", "itemName")
     }
     else {
         $(".location-field, .amount-field").hide();
-        $("#add-form").attr("action", "/addlocation");
+        addForm.attr("action", "/addlocation");
         $("#name").attr("name", "locationName")
     }
     $(".active").removeClass("active");
@@ -103,7 +122,7 @@ function showItems() {
             $.each(result, function (i, item) {
                 $("#result-list").append(`
                     <li id="${item.itemID}" onclick="showItem(${item.itemID})">
-                        <img id="item-image" src="${item.image}">
+                        ${generateImage(item.image)}
                         <span id="item-name">${item.itemName}<br></span>
                         <span id="item-location">${item.locationName}</span>
                     </li>
@@ -128,7 +147,7 @@ function showItem(itemID) {
         $("#item, .navbar-bottom").show();
         $("#back-btn").attr("onclick", "showItems()");
         $("#item-heading").html(`${result.itemName}`);
-        $("#item-image").html(`<img src="../public/img/${result.image}" alt="couldn't load image">`);
+        $("#item-image").html(generateImage(result.image));
         $("#item-attributes").html(`
                 Id: <span id="item-id">${result.itemID}</span><br>
                 Name: ${result.itemName}<br>
@@ -153,7 +172,7 @@ function showLocation(locationID) {
         $("#location, .navbar-bottom").show();
         $("#back-btn").attr("onclick", "showLocations()");
         $("#location-heading").html(`${result.locationName}`);
-        $("#location-image").html(`<img src="../public/img/${result.image}" alt="couldn't load image">`);
+        $("#location-image").html(generateImage(result.image));
         $("#location-attributes").html(`
             Id: ${result.locationID}<br>
             Name: ${result.name}<br>
@@ -162,4 +181,8 @@ function showLocation(locationID) {
         .fail(function(result){
             alert(result.message);
         });
+}
+
+function generateImage(path) {
+    return `<img src="./images/${path}" alt="couldn't load image" width="auto" height="100">`;
 }
