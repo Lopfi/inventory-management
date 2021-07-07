@@ -3,12 +3,11 @@ $("#add-menu, #item, .navbar-bottom, .popup").hide();
 
 const addForm = $("#add-form");
 
-const limit = 100;
+const limit = 10;
 
-let itemOffset = 0;
-let locationOffset = 0;
+let offset = 0;
 
-addForm.on("submit", function(evt) {
+addForm.on("submit", function (evt) {
     evt.preventDefault();
 
     const files = document.getElementById("images");
@@ -16,10 +15,10 @@ addForm.on("submit", function(evt) {
     let formData = addForm.serializeArray();
     const data = new FormData();
 
-    for(let i =0; i < formData.length; i++) {
+    for (let i = 0; i < formData.length; i++) {
         data.append(formData[i].name, formData[i].value);
     }
-    for(let i =0; i < files.files.length; i++) {
+    for (let i = 0; i < files.files.length; i++) {
         data.append("files", files.files[i]);
     }
 
@@ -27,36 +26,34 @@ addForm.on("submit", function(evt) {
 
     $.ajax({
         url: `http://localhost${addForm.attr("action")}`,
-        type: "PUT",
+        type: "POST",
         data: data,
         processData: false,
         contentType: false
     })
-        .done(function (result){
+        .done(function (result) {
             alert(result.message);
-            showAddMenu(addForm.attr("action") === "/additem");
+            showAddMenu(addForm.attr("action") === "/items");
         })
     return false; // To avoid actual submission of the form
 });
 
 function deleteItem() {
     $("#sure").show();
-    $("#popup-no").on("click", function() {
+    $("#popup-no").on("click", function () {
         $("#sure").hide();
         return false;
     });
-    $("#popup-yes").on("click", function() {
+    $("#popup-yes").on("click", function () {
         $.ajax({
-            url: "/delitem",
-            type: "DELETE",
-            dataType: "json",
-            data: {itemID: $("#item-id").text()},
+            url: `/items/${$("#item-id").text()}`,
+            type: "DELETE"
         })
-            .done(function(result) {
+            .done(function (result) {
                 alert(result.message);
                 showItems();
             })
-            .fail(function(result) {
+            .fail(function (result) {
                 alert(result.message);
                 showItems();
             });
@@ -65,22 +62,20 @@ function deleteItem() {
 
 function deleteLocation() {
     $("#sure").show();
-    $("#popup-no").on("click", function() {
+    $("#popup-no").on("click", function () {
         $("#sure").hide();
         return false;
     });
-    $("#popup-yes").on("click", function() {
+    $("#popup-yes").on("click", function () {
         $.ajax({
-            url: "/dellocation",
-            type: "DELETE",
-            dataType: "json",
-            data: {locationID: $("#location-id").text()},
+            url: `/locations/${$("#location-id").text()}`,
+            type: "DELETE"
         })
-            .done(function(result) {
+            .done(function (result) {
                 alert(result.message);
                 showItems();
             })
-            .fail(function(result) {
+            .fail(function (result) {
                 alert(result.message);
                 showLocations();
             });
@@ -91,26 +86,27 @@ function showLocations() {
     $("#add-menu, .navbar-bottom, #item, #location").hide();
     $("#results").show();
     $.ajax({
-        url: "/locationlist",
+        url: "/locations",
         type: "GET",
         dataType: "json",
-        data: {limit: limit, offset: 0},
+        data: {limit: limit, offset: offset},
     })
-        .done(function(result) {
+        .done(function (result) {
             $(".active").removeClass("active");
             $("#locations-btn").addClass("active");
             $("#result-count").html(`found ${result.length} locations`);
             $("#result-list").empty();
-            $.each(result, function(i, location) {
+            $.each(result, function (i, location) {
                 $("#result-list").append(`
                     <li class="location" onclick="showLocation(${location.locationID})">
-                    ${location.locationName}<br>
+                        ${generateImage(location.image)}
+                        <span id="name">${location.locationName}<br></span>
                     ID: ${location.locationID}<br>
                     Items: ${location.amount}
                     </li>`);
             })
         })
-        .fail(function(result) {
+        .fail(function (result) {
             alert(result.message)
         });
     return false;//Returning false prevents the event from continuing up the chain
@@ -120,12 +116,12 @@ function showItems() {
     $("#item, #location, #add-menu, .navbar-bottom, .popup").hide();
     $("#results").show();
     $.ajax({
-        url: "/itemlist",
+        url: "/items",
         type: "GET",
         dataType: "json",
-        data: {limit: limit, offset: 0},
+        data: {limit: limit, offset: offset},
     })
-        .done(function(result) {
+        .done(function (result) {
             $(".active").removeClass("active");
             $("#items-btn").addClass("active");
             $("#result-count").html(`found ${result.length} items`);
@@ -134,27 +130,26 @@ function showItems() {
                 $("#result-list").append(`
                     <li id="${item.itemID}" onclick="showItem(${item.itemID})">
                         ${generateImage(item.image)}
-                        <span id="item-name">${item.itemName}<br></span>
-                        <span id="item-location">${item.locationName}</span>
+                        <span id="name">${item.itemName}<br></span>
+                        <span id="location">${item.locationName}</span>
                     </li>
                 `);
             })
         })
-        .fail(function(result){
+        .fail(function (result) {
             alert(result.message);
         });
     return false;//Returning false prevents the event from continuing up the chain
 }
 
 function showAddMenu(type) {
-    if (type){
+    if (type) {
         $(".location-field, .amount-field").show();
-        addForm.attr("action", "/additem");
+        addForm.attr("action", "/items");
         $("#name").attr("name", "itemName")
-    }
-    else {
+    } else {
         $(".location-field, .amount-field").hide();
-        addForm.attr("action", "/addlocation");
+        addForm.attr("action", "/locations");
         $("#name").attr("name", "locationName")
     }
     $(".active").removeClass("active");
@@ -166,70 +161,55 @@ function showAddMenu(type) {
 
 function showItem(itemID) {
     $.ajax({
-        url: "/itemdata",
-        type: "GET",
-        dataType: "json",
-        data: {itemID: itemID},
+        url: `/items/${itemID}`,
+        type: "GET"
     })
-        .done(function(result) {
-        $("#results").hide();
-        $("#item, .navbar-bottom").show();
-        $("#delete-btn").attr("onclick", "deleteItem()");
-        $("#back-btn").attr("onclick", "showItems()");
-        $("#item-heading").html(`${result.itemName}`);
-        $("#item-image").html(generateImage(result.image));
-        $("#item-attributes").html(`
+        .done(function (result) {
+            result = result[0];
+            $("#results").hide();
+            $("#item, .navbar-bottom").show();
+            $("#delete-btn").attr("onclick", "deleteItem()");
+            $("#back-btn").attr("onclick", "showItems()");
+            $("#item-heading").html(`${result.itemName}`);
+            $("#item-image").html(generateImage(result.image));
+            $("#item-attributes").html(`
                 Id: <span id="item-id">${result.itemID}</span><br>
                 Name: ${result.itemName}<br>
                 Description: ${result.description}<br>
                 Amount: ${result.amount}<br>
                 Location: ${result.locationID}`);
         })
-        .fail(function(result){
+        .fail(function (result) {
             alert(result.message);
         });
 }
 
 function showLocation(locationID) {
     $.ajax({
-        url: "/locationdata",
-        type: "GET",
-        dataType: "json",
-        data: {locationID: locationID},
+        url: `/locations/${locationID}`,
+        type: "GET"
     })
-        .done(function(result) {
-        $("#results, #item, #location").hide();
-        $("#location, .navbar-bottom").show();
+        .done(function (result) {
+            result = result[0];
+            $("#results, #item, #location").hide();
+            $("#location, .navbar-bottom").show();
             $("#delete-btn").attr("onclick", "deleteLocation()");
-        $("#back-btn").attr("onclick", "showLocations()");
-        $("#location-heading").html(`${result.locationName}`);
-        $("#location-image").html(generateImage(result.image));
-        $("#location-attributes").html(`
+            $("#back-btn").attr("onclick", "showLocations()");
+            $("#location-heading").html(`${result.locationName}`);
+            $("#location-image").html(generateImage(result.image));
+            $("#location-attributes").html(`
             Id: <span id="location-id">${result.locationID}</span><br>
             Name: ${result.locationName}<br>
             Description: ${result.description}`);
         })
-        .fail(function(result){
+        .fail(function (result) {
             console.log(result);
             alert(result.message);
         });
 }
 
 function editThing() {
-    $.ajax({
-        url: "/delitem",
-        type: "DELETE",
-        dataType: "json",
-        data: {itemID: $("#item-id").text()},
-    })
-        .done(function(result) {
-            alert(result.message);
-            showItems();
-        })
-        .fail(function(result) {
-            alert(result.message);
-            showItems();
-        });
+
 }
 
 function generateImage(path) {

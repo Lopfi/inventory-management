@@ -13,3 +13,9 @@ exports.sendSqlQuery = function(db, sql, params, res) {
         }
     });
 }
+
+exports.getImagePaths = function(images) {
+    let paths = [];
+    if (images.length > 0) for (const image of images) paths.push(image.filename);
+    else paths.push("default.jpg");
+}
