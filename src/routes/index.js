@@ -39,7 +39,7 @@ module.exports = function (db, upload) {
         sendSqlQuery(db, sql, [locationID], res);
     });
 
-    router.get("/itemdata", (req, res) => {  //maybe rename to /item
+    router.get("/itemdata", (req, res) => {  //TODO: maybe rename to /item
         let itemID = req.query.itemID;
         let sql = `SELECT *
                    FROM items
@@ -48,13 +48,11 @@ module.exports = function (db, upload) {
             if (err) {
                 console.log("Error: " + err.message);
                 res.status(500).json({message: "database error"})
-            } else {
-                res.status(200).json(row);
-            }
+            } else res.status(200).json(row);
         });
     });
 
-    router.get("/locationdata", (req, res) => {  //maybe rename to /location
+    router.get("/locationdata", (req, res) => {  //TODO: maybe rename to /location
         let locationID = req.query.locationID;
         let sql = `SELECT *
                    FROM locations
@@ -63,11 +61,7 @@ module.exports = function (db, upload) {
             if (err) {
                 console.log("Error: " + err.message);
                 res.status(500).json({message: "database error"})
-            } else {
-                let response = []
-                response.push(row);
-                res.status(200).json(response);
-            }
+            } else res.status(200).json(row);
         });
     });
 
@@ -88,8 +82,8 @@ module.exports = function (db, upload) {
     router.delete("/dellocation", (req, res) => {
         let locationID = req.body.locationID;
         let sql = `DELETE
-                   FROM items
-                   WHERE itemID = ?`;
+                   FROM locations
+                   WHERE locationID = ?`;
         db.run(sql, [locationID], (err) => {
             if (err) {
                 console.log("Error: " + err.message);
@@ -103,7 +97,7 @@ module.exports = function (db, upload) {
         let images = req.files;
         console.log("adding item to database");
         let paths = [];
-        if (images) for (const image of images) paths.push(image.filename);
+        if (images.length > 0) for (const image of images) paths.push(image.filename);
         else paths.push("default.jpg");
         let sql = `INSERT INTO items (itemName, description, amount, locationID, image)
                    VALUES (?, ?, ?, ?, ?)`;
@@ -111,7 +105,7 @@ module.exports = function (db, upload) {
             if (err) {
                 console.log("Error: " + err.message);
                 res.status(500).json({message: "database error"})
-            } else res.status(200).json({message: "successfully added item to database", uploaded: images.length});
+            } else res.status(200).json({message: "successfully added item to database"});
         });
     });
 
@@ -119,7 +113,7 @@ module.exports = function (db, upload) {
         const {locationName, description} = req.body;
         let images = req.files;
         let paths = [];
-        if (images) for (const image of images) paths.push(image.filename);
+        if (images.length > 0) for (const image of images) paths.push(image.filename);
         else paths.push("default.jpg");
         let sql = `INSERT INTO locations (locationName, description, image)
                    VALUES (?, ?, ?)`;
@@ -127,10 +121,7 @@ module.exports = function (db, upload) {
             if (err) {
                 console.log("Error: " + err.message);
                 res.status(500).json({message: "database error"})
-            } else res.status(200).json({
-                message: "successfully added location to database",
-                uploaded: req.files.length
-            });
+            } else res.status(200).json({message: "successfully added location to database"});
         });
     });
 

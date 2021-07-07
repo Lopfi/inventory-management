@@ -3,7 +3,12 @@ $("#add-menu, #item, .navbar-bottom, .popup").hide();
 
 const addForm = $("#add-form");
 
-addForm.submit(function(evt) {
+const limit = 100;
+
+let itemOffset = 0;
+let locationOffset = 0;
+
+addForm.on("submit", function(evt) {
     evt.preventDefault();
 
     const files = document.getElementById("images");
@@ -34,13 +39,13 @@ addForm.submit(function(evt) {
     return false; // To avoid actual submission of the form
 });
 
-function deleteThing() {
+function deleteItem() {
     $("#sure").show();
-    $("#popup-no").click(function() {
+    $("#popup-no").on("click", function() {
         $("#sure").hide();
         return false;
     });
-    $("#popup-yes").click(function() {
+    $("#popup-yes").on("click", function() {
         $.ajax({
             url: "/delitem",
             type: "DELETE",
@@ -58,14 +63,38 @@ function deleteThing() {
     });
 }
 
+function deleteLocation() {
+    $("#sure").show();
+    $("#popup-no").on("click", function() {
+        $("#sure").hide();
+        return false;
+    });
+    $("#popup-yes").on("click", function() {
+        $.ajax({
+            url: "/dellocation",
+            type: "DELETE",
+            dataType: "json",
+            data: {locationID: $("#location-id").text()},
+        })
+            .done(function(result) {
+                alert(result.message);
+                showItems();
+            })
+            .fail(function(result) {
+                alert(result.message);
+                showLocations();
+            });
+    });
+}
+
 function showLocations() {
-    $("#results").show();
     $("#add-menu, .navbar-bottom, #item, #location").hide();
+    $("#results").show();
     $.ajax({
         url: "/locationlist",
         type: "GET",
         dataType: "json",
-        data: {limit: 10, offset:0},
+        data: {limit: limit, offset: 0},
     })
         .done(function(result) {
             $(".active").removeClass("active");
@@ -85,24 +114,6 @@ function showLocations() {
             alert(result.message)
         });
     return false;//Returning false prevents the event from continuing up the chain
-};
-
-function showAddMenu(type) {
-    if (type){
-        $(".location-field, .amount-field").show();
-        addForm.attr("action", "/additem");
-        $("#name").attr("name", "itemName")
-    }
-    else {
-        $(".location-field, .amount-field").hide();
-        addForm.attr("action", "/addlocation");
-        $("#name").attr("name", "locationName")
-    }
-    $(".active").removeClass("active");
-    $("#add-btn").addClass("active");
-    $(".results, #item, #location").hide();
-    $("#add-menu").show();
-    $("#add-popup").hide();
 }
 
 function showItems() {
@@ -112,7 +123,7 @@ function showItems() {
         url: "/itemlist",
         type: "GET",
         dataType: "json",
-        data: {limit: 10, offset:0},
+        data: {limit: limit, offset: 0},
     })
         .done(function(result) {
             $(".active").removeClass("active");
@@ -135,6 +146,24 @@ function showItems() {
     return false;//Returning false prevents the event from continuing up the chain
 }
 
+function showAddMenu(type) {
+    if (type){
+        $(".location-field, .amount-field").show();
+        addForm.attr("action", "/additem");
+        $("#name").attr("name", "itemName")
+    }
+    else {
+        $(".location-field, .amount-field").hide();
+        addForm.attr("action", "/addlocation");
+        $("#name").attr("name", "locationName")
+    }
+    $(".active").removeClass("active");
+    $("#add-btn").addClass("active");
+    $(".results, #item, #location").hide();
+    $("#add-menu").show();
+    $("#add-popup").hide();
+}
+
 function showItem(itemID) {
     $.ajax({
         url: "/itemdata",
@@ -145,6 +174,7 @@ function showItem(itemID) {
         .done(function(result) {
         $("#results").hide();
         $("#item, .navbar-bottom").show();
+        $("#delete-btn").attr("onclick", "deleteItem()");
         $("#back-btn").attr("onclick", "showItems()");
         $("#item-heading").html(`${result.itemName}`);
         $("#item-image").html(generateImage(result.image));
@@ -152,7 +182,7 @@ function showItem(itemID) {
                 Id: <span id="item-id">${result.itemID}</span><br>
                 Name: ${result.itemName}<br>
                 Description: ${result.description}<br>
-                Amount: ${result.count}<br>
+                Amount: ${result.amount}<br>
                 Location: ${result.locationID}`);
         })
         .fail(function(result){
@@ -165,21 +195,40 @@ function showLocation(locationID) {
         url: "/locationdata",
         type: "GET",
         dataType: "json",
-        data: {itemID: locationID},
+        data: {locationID: locationID},
     })
         .done(function(result) {
         $("#results, #item, #location").hide();
         $("#location, .navbar-bottom").show();
+            $("#delete-btn").attr("onclick", "deleteLocation()");
         $("#back-btn").attr("onclick", "showLocations()");
         $("#location-heading").html(`${result.locationName}`);
         $("#location-image").html(generateImage(result.image));
         $("#location-attributes").html(`
-            Id: ${result.locationID}<br>
-            Name: ${result.name}<br>
+            Id: <span id="location-id">${result.locationID}</span><br>
+            Name: ${result.locationName}<br>
             Description: ${result.description}`);
         })
         .fail(function(result){
+            console.log(result);
             alert(result.message);
+        });
+}
+
+function editThing() {
+    $.ajax({
+        url: "/delitem",
+        type: "DELETE",
+        dataType: "json",
+        data: {itemID: $("#item-id").text()},
+    })
+        .done(function(result) {
+            alert(result.message);
+            showItems();
+        })
+        .fail(function(result) {
+            alert(result.message);
+            showItems();
         });
 }
 

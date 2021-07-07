@@ -7,7 +7,7 @@ async function startServer() {
 
     await loaders({ expressApp: app });
 
-    app.listen(80, () => console.log('Inventory management listening on port 80!'))
+    app.listen(80, () => console.log('Inventory management listening on port 80!'));
 }
 
 startServer();

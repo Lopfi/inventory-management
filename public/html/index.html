@@ -46,7 +46,7 @@
         <form action="/additem" id="add-form" class="form">
             <label for="name"><span class="required">Name </span></label><br>
             <input type="text" id="name" name="itemName" value=""><br>
-            <label for="Description"><span>Description </span></label><br>
+            <label for="description"><span>Description </span></label><br>
             <input type="text" id="description" name="description" value=""><br>
             <label for="amount" class="amount-field"><span>Amount</span></label><br>
             <input type="number" class="amount-field" id="amount" name="amount" value=1><br>
@@ -60,8 +60,8 @@
     <div class="bottom-float">
         <ul class="navbar-bottom">
             <li class="navbar-element"><a id="back-btn" class="navbar-button">Back</a></li>
-            <li class="navbar-element"><a onclick="deleteThing()" id="delete-btn" class="navbar-button">Delete</a></li>
-            <li class="navbar-element"><a id="edit-btn" class="navbar-button">Edit</a></li>
+            <li class="navbar-element"><a onclick="deleteItem()" id="delete-btn" class="navbar-button">Delete</a></li>
+            <li class="navbar-element"><a onclick="editThing()" id="edit-btn" class="navbar-button">Edit</a></li>
         </ul>
     </div>
     <div class="popup" id="sure">

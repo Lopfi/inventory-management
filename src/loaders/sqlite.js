@@ -8,38 +8,18 @@ module.exports = function () {
             console.log("db connection successful");
         }
     });
-
+    //TODO: rename columns
     db.run(`
     CREATE TABLE IF NOT EXISTS items
     (
-        itemID
-        INTEGER
-        PRIMARY
-        KEY
-        NOT
-        NULL,
-        itemName
-        TEXT
-        NOT
-        NULL,
-        description
-        TEXT,
-        locationID
-        INTEGER,
-        amount
-        INTEGER
-        DEFAULT
-        1,
-        image
-        TEXT,
-        FOREIGN
-        KEY
-    (
-        locationID
-    ) REFERENCES locations
-    (
-        locationID
-    )
+        itemID INTEGER PRIMARY KEY NOT NULL,
+        itemName TEXT NOT NULL,
+        description TEXT,
+        locationID INTEGER,
+        amount INTEGER DEFAULT 1,
+        image TEXT, 
+        FOREIGN KEY ( locationID ) 
+            REFERENCES locations ( locationID )
         );`, function (err) {
         if (err) {
             return console.log(err.message);
