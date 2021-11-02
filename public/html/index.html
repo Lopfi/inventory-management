@@ -60,7 +60,7 @@
     <div class="bottom-float">
         <ul class="navbar-bottom">
             <li class="navbar-element"><a id="back-btn" class="navbar-button">Back</a></li>
-            <li class="navbar-element"><a onclick="deleteItem()" id="delete-btn" class="navbar-button">Delete</a></li>
+            <li class="navbar-element"><a onclick="del(`/items/${$('#item-id').text()}`, showItems)" id="delete-btn" class="navbar-button">Delete</a></li>
             <li class="navbar-element"><a onclick="editThing()" id="edit-btn" class="navbar-button">Edit</a></li>
         </ul>
     </div>

@@ -5,7 +5,8 @@ body{
 }
 
 .results {
-    padding-top: 40px;
+    padding-top: 45px;
+    padding-left: 20px;
 }
 
 #item {

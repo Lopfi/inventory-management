@@ -61,6 +61,7 @@ function deleteItem() {
 }
 
 function deleteLocation() {
+    del(`/locations/${$("#location-id").text()}`, showLocations());
     $("#sure").show();
     $("#popup-no").on("click", function () {
         $("#sure").hide();
@@ -73,7 +74,7 @@ function deleteLocation() {
         })
             .done(function (result) {
                 alert(result.message);
-                showItems();
+                showLocations();
             })
             .fail(function (result) {
                 alert(result.message);
@@ -81,6 +82,29 @@ function deleteLocation() {
             });
     });
 }
+
+function del(url, show) {
+    $("#sure").show();
+    $("#popup-no").on("click", function () {
+        $("#sure").hide();
+        return false;
+    });
+    $("#popup-yes").on("click", function () {
+        $.ajax({
+            url: url,
+            type: "DELETE"
+        })
+            .done(function (result) {
+                alert(result.message);
+                show();
+            })
+            .fail(function (result) {
+                alert(result.message);
+                show();
+            });
+    });
+}
+
 
 function showLocations() {
     $("#add-menu, .navbar-bottom, #item, #location").hide();
@@ -168,7 +192,7 @@ function showItem(itemID) {
             result = result[0];
             $("#results").hide();
             $("#item, .navbar-bottom").show();
-            $("#delete-btn").attr("onclick", "deleteItem()");
+            $("#delete-btn").attr("onclick", "del(`/items/${$('#item-id').text()}`, showItems)");
             $("#back-btn").attr("onclick", "showItems()");
             $("#item-heading").html(`${result.itemName}`);
             $("#item-image").html(generateImage(result.image));

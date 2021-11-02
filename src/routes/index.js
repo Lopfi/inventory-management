@@ -20,7 +20,7 @@ module.exports = function (db, upload) {
             LIMIT ? OFFSET ?`;
         sendSqlQuery(db, sql, [limit, offset], res);
     })
-        .post(upload.array("files"), (req, res) => {
+        .put(upload.array("files"), (req, res) => {
         const {itemName, description, amount, locationID} = req.body;
         let sql = `INSERT INTO items (itemName, description, amount, locationID, image)
                    VALUES (?, ?, ?, ?, ?)`;
