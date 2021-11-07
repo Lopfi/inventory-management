@@ -21,13 +21,13 @@ module.exports = function (db, upload) {
         sendSqlQuery(db, sql, [limit, offset], res);
     })
         .put(upload.array("files"), (req, res) => {
-        const {itemName, description, amount, locationID} = req.body;
+        const {name, description, amount, location} = req.body;
         let sql = `INSERT INTO items (itemName, description, amount, locationID, image)
                    VALUES (?, ?, ?, ?, ?)`;
-        db.run(sql, [itemName, description, amount, locationID, getImagePaths(req.files)], (err) => {
+        db.run(sql, [name, description, amount, location, getImagePaths(req.files)], (err) => {
             if (err) {
                 console.log("Error: " + err.message);
-                res.status(500).json({message: "database error"})
+                res.status(500).json({message: "database error"});
             } else res.status(200).json({message: "successfully added item to database"});
         });
     });
@@ -39,18 +39,18 @@ module.exports = function (db, upload) {
                    FROM locations
                             LEFT JOIN items
                                       ON locations.locationID = items.locationID
-                   GROUP BY locations.locationName
+                   GROUP BY locations.locationID
                    LIMIT ? OFFSET ?`;
         sendSqlQuery(db, sql, [limit, offset], res);
     })
         .put(upload.array("files"), (req, res) => {
-        const {locationName, description} = req.body;
+        const {name, description} = req.body;
         let sql = `INSERT INTO locations (locationName, description, image)
                    VALUES (?, ?, ?)`;
-        db.run(sql, [locationName, description, getImagePaths(req.files)], (err) => {
+        db.run(sql, [name, description, getImagePaths(req.files)], (err) => {
             if (err) {
                 console.log("Error: " + err.message);
-                res.status(500).json({message: "database error"})
+                res.status(500).json({message: "database error"});
             } else res.status(200).json({message: "successfully added location to database"});
         });
     });
@@ -62,17 +62,28 @@ module.exports = function (db, upload) {
                    WHERE locationID = ?`;
             sendSqlQuery(db, sql, [req.params.id], res);
         })
+        .patch((req, res) => {
+            const {id, name, description, amount, location} = req.body;
+            let sql = `UPDATE items SET itemName=?, description=?, amount=?, locationID=? 
+            WHERE itemID=?`;
+            db.run(sql, [name, description, amount, location, id], (err) => {
+                if (err) {
+                    console.log("Error: " + err.message);
+                    res.status(500).json({message: "database error"});
+                } else res.status(200).json({message: "successfully updated item in database"});
+            });
+        })
         .delete((req, res) => {
-        let sql = `DELETE
-                   FROM locations
-                   WHERE locationID = ?`;
-        db.run(sql, [req.params.id], (err) => {
-            if (err) {
-                console.log("Error: " + err.message);
-                res.status(500).json({message: "database error"})
-            } else res.status(200).json({message: "successfully deleted from locations"});
+            let sql = `DELETE
+                    FROM locations
+                    WHERE locationID = ?`;
+            db.run(sql, [req.params.id], (err) => {
+                if (err) {
+                    console.log("Error: " + err.message);
+                    res.status(500).json({message: "database error"});
+                } else res.status(200).json({message: "successfully deleted from locations"});
+            });
         });
-    });
 
     router.get("/locations/:id/items", (req, res) => {
         let sql = `SELECT *
@@ -111,6 +122,8 @@ module.exports = function (db, upload) {
                    LIMIT ? OFFSET ?`;
         sendSqlQuery(db, sql, [string, string, string, string, limit, offset], res);
     });
+
+    router.get("/img/:img", (req, res) => res.status(200).sendFile(path.join(__dirname, '../../db/images/', req.params.img)));
 
     router.get("*", (req, res) => res.status(404).send("404"));
 

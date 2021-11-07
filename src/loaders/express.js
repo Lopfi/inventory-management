@@ -12,7 +12,7 @@ module.exports = function ({ app }, db, multer){
     app.use(express.static(path.join(__dirname, "../../public")));
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(express.json());
-    app.use(routes(db, multer));
+    app.use('/api', routes(db, multer));
 
     // Return the express app
     return app;

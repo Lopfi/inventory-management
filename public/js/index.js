@@ -22,11 +22,11 @@ addForm.on("submit", function (evt) {
         data.append("files", files.files[i]);
     }
 
-    console.log();
+    console.log(data);
 
     $.ajax({
         url: `http://localhost${addForm.attr("action")}`,
-        type: "POST",
+        type: "PUT",
         data: data,
         processData: false,
         contentType: false
