@@ -1,2 +1,2 @@
 # inventory-management
-A simple QR-Code and web based inventory system to help keeping track off stuff
+A simple QR-Code and web based inventory system to help keeping track off stuff. Not done yet!
