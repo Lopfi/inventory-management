@@ -8,11 +8,16 @@
                 Amount: {{item.amount}}<br>
                 <router-link :to="'/location/' + item.locationID" class="link">Location: {{item.locationID}}</router-link></p>
     </div>
+    <navbarBottom />
 </template>
 <script>
 import axios from 'axios'
+import NavbarBottom from '../components/NavbarBottom.vue'
 
 export default {
+    components: {
+        NavbarBottom,
+    },
     data() {
         return {
             item: null,

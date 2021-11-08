@@ -16,14 +16,17 @@
             </ul>
         </div>
     </div>
+    <navbarBottom />
 </template>
 <script>
 import axios from 'axios'
 import Item from '../components/Item'
+import NavbarBottom from '../components/NavbarBottom.vue'
 
 export default {
     components: {
         Item,
+        NavbarBottom
     },
     data() {
         return {

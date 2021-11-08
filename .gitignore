@@ -104,7 +104,7 @@ dist
 .tern-port
 
 #Database file
-db/
+#db/
 
-db/content.db
+#db/content.db
 

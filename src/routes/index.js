@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const {sendSqlQuery, getImagePaths} = require('../utils');
+const {sendSqlQuery, getImagePaths, generatePDF} = require('../utils');
 
 const router = express.Router()
 
@@ -55,6 +55,19 @@ module.exports = function (db, upload) {
         });
     });
 
+    router.get("/locations/labels", (req, res) => {
+        const {limit, offset} = req.query;
+        let sql = `SELECT locationID, locationName FROM locations LIMIT ? OFFSET ?`;
+        db.all(sql, [limit, offset], (err, rows) => {
+            if (err) {
+                console.log("Error: " + err.message);
+                res.status(500).json({message: "database error"})
+            } else {
+                //TODO: add fail check
+                res.status(200).sendFile(generatePDF(rows));
+            }
+        });
+    });
     router.route("/locations/:id")
         .get((req, res) => {
             let sql = `SELECT *

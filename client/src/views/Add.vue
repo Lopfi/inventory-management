@@ -56,6 +56,7 @@ export default {
         this.formData.append('amount', this.form.amount);
         this.formData.append('location', this.form.location);
         axios.put(`http://localhost:8080/api/${this.kind}s`, this.formData).then(response => (alert(response.data.message)));
+        this.formData = new FormData();
       },
       filesChange(fileList) {
         const formData = new FormData();
