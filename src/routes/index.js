@@ -1,13 +1,11 @@
 const express = require('express');
 const path = require('path');
+const fsExtra = require('fs-extra');
 const {sendSqlQuery, getImagePaths, generatePDF} = require('../utils');
 
 const router = express.Router()
 
 module.exports = function (db, upload) {
-    router.get("/", (req, res) => res.sendFile(path.join(__dirname, '../../public/html', 'index.html')));
-    router.get("/add", (req, res) => res.sendFile(path.join(__dirname, '../../public/html', 'add.html')));
-    router.get("/scan", (req, res) => res.sendFile(path.join(__dirname, '../../public/html', 'scanner.html')));
 
     router.route("/items")
         .get((req, res) => {
@@ -57,6 +55,7 @@ module.exports = function (db, upload) {
 
     router.get("/locations/labels", (req, res) => {
         const {limit, offset} = req.query;
+        console.log('labels')
         let sql = `SELECT locationID, locationName FROM locations LIMIT ? OFFSET ?`;
         db.all(sql, [limit, offset], (err, rows) => {
             if (err) {
@@ -64,7 +63,8 @@ module.exports = function (db, upload) {
                 res.status(500).json({message: "database error"})
             } else {
                 //TODO: add fail check
-                res.status(200).sendFile(generatePDF(rows));
+                generatePDF(rows);
+                res.status(200).download(path.join(__dirname, '../utils/temp/labels.pdf'));
             }
         });
     });
@@ -126,7 +126,8 @@ module.exports = function (db, upload) {
 
 
     router.get("/search", (req, res) => {
-        const {string, limit, offset} = req.query;
+        var {string, limit, offset} = req.query;
+        string = '%' + string + '%';
         let sql = `SELECT locations.locationID, locations.locationName, locations.image, count(items.itemID) AS amount
                    FROM locations
                             LEFT JOIN items

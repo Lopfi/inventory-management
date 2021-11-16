@@ -13,6 +13,7 @@
       </li>
       <li class="navbar-element"><router-link to="/scan" class="link">Scan</router-link></li>
       <li class="navbar-element"><router-link to="/about" class="link">About</router-link></li>
+      <li><input type="text" placeholder="Search.."></li>
     </ul>
   </div>
   <router-view/>
@@ -40,6 +41,14 @@ body{
     overflow: hidden;
     background-color: #2f2f2f;
     margin-bottom: 10px;
+}
+
+.navbar input[type=text] {
+  float: right;
+  padding: 2.5px;
+  border: none;
+  margin-top: 0px;
+  margin-right: 16px;
 }
 
 .navbar-element {

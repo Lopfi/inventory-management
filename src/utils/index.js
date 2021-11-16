@@ -1,5 +1,4 @@
-const QRCode = require('qrcode');
-const PDFDocument = require('pdfkit');
+const path = require('path');
 
 exports.sendSqlQuery = function(db, sql, params, res) {
     db.all(sql, params, (err, rows) => {
@@ -20,70 +19,37 @@ exports.getImagePaths = function(images) {
     let paths = [];
     if (images.length > 0) for (const image of images) paths.push(image.filename);
     else paths.push("Default.png");
-    console.log(paths);
     return paths;
 }
 
-exports.getIp = function() {
-    let address;
-    require('dns').lookup(require('os').hostname(), function (err, add, fam) {
-        address = add;
-    })
-    return address;
+function getIp() {
+  return new Promise(resolve => {
+    require('dns').lookup(require('os').hostname(), (err, add, fam) => resolve(add));
+  });
 }
 
-exports.generateQR = function () {
-    QRCode.toDataURL('I am a pony!', function (err, url) {
-        console.log(url)
-      })
+function generateQR(input, filename) {
+  require('fs').writeFileSync(path.join(__dirname, filename + '.png'), require('qr-image').imageSync(input));
 }
 
-exports.generatePDF = function() {
-    let res;
-    const doc = new PDFDocument;
-// Embed a font, set the font size, and render some text
-doc
-  .font('fonts/PalatinoBold.ttf')
-  .fontSize(25)
-  .text('Some text with an embedded font!', 100, 100);
+exports.generatePDF = async function(rows) {
+  const PDFDocument = require('pdfkit');
+  const fs = require('fs');
 
-// Add an image, constrain it to a given size, and center it vertically and horizontally
-doc.image('path/to/image.png', {
-  fit: [250, 300],
-  align: 'center',
-  valign: 'center'
-});
+  const doc = new PDFDocument();
+  doc.pipe(fs.createWriteStream(path.join(__dirname, '/temp/labels.pdf')));
 
-// Add another page
-doc
-  .addPage()
-  .fontSize(25)
-  .text('Here is some vector graphics...', 100, 100);
+  const ip = getIp();
 
-// Draw a triangle
-doc
-  .save()
-  .moveTo(100, 150)
-  .lineTo(100, 250)
-  .lineTo(200, 250)
-  .fill('#FF3300');
-
-// Apply some transforms and render an SVG path with the 'even-odd' fill rule
-doc
-  .scale(0.6)
-  .translate(470, -380)
-  .path('M 250,75 L 323,301 131,161 369,161 177,301 z')
-  .fill('red', 'even-odd')
-  .restore();
-
-// Add some text with annotations
-doc
-  .addPage()
-  .fillColor('blue')
-  .text('Here is a link!', 100, 100)
-  .underline(100, 100, 160, 27, { color: '#0000FF' })
-  .link(100, 100, 160, 27, 'http://google.com/');
-
-// Finalize PDF file
-doc.end();
+  for (let i = 0; i < rows.length; i++) {
+    const location = rows[i];
+    let posX = i % 2 * 200 + 30;
+    let posY = Math.floor(i / 2) * 100 + 30;
+    //doc.addPage();
+    doc.fontSize(25).text(location.locationName, posX + 90, posY+8);
+    doc.fontSize(15).text('ID: ' + location.locationID, posX + 90, posY + 30);
+    generateQR(ip + '/locations/' + location.locationID, '/temp/' + location.locationID);
+    doc.image(path.join(__dirname, '/temp/' + location.locationID + '.png'), posX, posY, {width: 80, height: 80});
+  }
+  doc.end();
 }

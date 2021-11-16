@@ -8,7 +8,10 @@
                 <location :location="result" v-if="kind === 'locations'" @click="this.$router.push(`/location/${result.locationID}`)"/>
             </li>
         </ul>
+        <btn v-if="kind === 'locations'" :method="this.method" :label="'Generate Labels'" :url="`http://localhost:8080/api/locations/labels?limit=${this.limit}&offset=${this.offset}`"/>
+        <btn :method="this.method" :label="'Load more'" @click="limit+=10; getResults(this.kind)"/>
     </div>
+    
 </div>
 </template>
 <script>
@@ -16,11 +19,13 @@
 import axios from 'axios'
 import Item from '../components/Item.vue'
 import Location from '../components/Location.vue'
+import Btn from '../components/Btn.vue'
 
 export default {
     components: {
         Item,
         Location,
+        Btn,
     },
     data() {
         return {
@@ -32,18 +37,20 @@ export default {
     },
     watch: {
         $route(val) {
-            this.getResults(val.params.kind);
+            this. kind = val.params.kind;
+            this.getResults();
         }
     },
     mounted() {
-        this.getResults(this.$route.params.kind);
+            this.kind = this.$route.params.kind;
+        this.getResults();
     },
 
     methods: {
-      getResults(kind) {
-        this.kind = kind;
-        axios.get(`http://localhost:8080/api/${kind}?limit=${this.limit}&offset=${this.offset}`).then(response => (this.results = response.data)); 
-      }  
+        getResults() {
+            axios.get(`http://localhost:8080/api/${this.kind}?limit=${this.limit}&offset=${this.offset}`).then(response => (this.results = response.data)); 
+        },
+        method() {},
     },
 }
 </script>

@@ -5,7 +5,6 @@ module.exports = function () {
         if (err) {
             console.log("Error: " + err.message);
         } else {
-            console.log("db connection successful");
         }
     });
     //TODO: rename columns
@@ -24,7 +23,6 @@ module.exports = function () {
         if (err) {
             return console.log(err.message);
         }
-        console.log(`Initialized items table.`);
     });
 
     db.run(`
@@ -46,16 +44,14 @@ module.exports = function () {
         if (err) {
             return console.log(err.message);
         }
-        console.log(`Initialized locations table.`);
     });
 
     db.run(`INSERT INTO locations (locationID, locationName, description, image)
-        SELECT 0, 'Default', 'No Location specified', 'default.jpg'
+        SELECT 0, 'Default', 'No Location specified', 'default.png'
         WHERE NOT EXISTS (SELECT locationID FROM locations WHERE locationID = 0);`, function (err) {
         if (err) {
             return console.log(err.message);
         }
-        console.log(`Added default location.`);
     });
     return db;
 }
