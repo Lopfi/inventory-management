@@ -28,10 +28,10 @@ export default {
         return {
             kind: null,
             form: {
-                name: 'no name given',
-                description: 'no description given',
+                name: '',
+                description: '',
                 amount: 1,
-                location: '0',
+                location: '1',
             },
             formData: new FormData()
         }

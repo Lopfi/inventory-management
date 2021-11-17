@@ -30,7 +30,7 @@ export default {
     data() {
         return {
             kind: null,
-            limit: 10,
+            limit: 100,
             offset: 0,
             results: null
         }
