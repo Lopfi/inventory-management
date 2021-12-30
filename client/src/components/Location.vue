@@ -1,6 +1,6 @@
 <template lang="">
     <div>
-        <img :src="'http://localhost:3000/api/img/' + location.image" alt="couldn't load image" width="100" height="100" />
+        <img :src="'http://127.0.0.1:3000/api/img/' + location.image" alt="couldn't load image" width="100" height="100" />
         <span id="name">{{ location.locationName }}<br /></span>
         ID: {{ location.locationID }}<br />
         Items: {{ location.amount }}

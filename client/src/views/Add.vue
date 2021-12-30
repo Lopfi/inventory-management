@@ -50,14 +50,14 @@ export default {
     methods: {
         getResults(kind) {
             this.kind = kind;
-            //axios.get(`http://localhost:3000/api/${kind}?limit=${this.limit}&offset=${this.offset}`).then(response => (this.results = response.data));
+            //axios.get(`http://127.0.0.1:3000/api/${kind}?limit=${this.limit}&offset=${this.offset}`).then(response => (this.results = response.data));
         },
         submit() {
             this.formData.append('name', this.form.name);
             this.formData.append('description', this.form.description);
             this.formData.append('amount', this.form.amount);
             this.formData.append('location', this.form.location);
-            axios.put(`http://localhost:3000/api/${this.kind}s`, this.formData).then((response) => alert(response.data.message));
+            axios.put(`http://127.0.0.1:3000/api/${this.kind}s`, this.formData).then((response) => alert(response.data.message));
             this.formData = new FormData();
         },
         filesChange(fileList) {
