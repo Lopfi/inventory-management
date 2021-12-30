@@ -1,4 +1,6 @@
-cd client
+#!/bin/bash
+
+cd ../client
 npm run build
 cd ..
 docker build . -t lopfi/inventory-management
