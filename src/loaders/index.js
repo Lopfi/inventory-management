@@ -1,12 +1,12 @@
 const expressLoader = require('./express');
-const sqliteLoader = require('./sqlite');
+const dbLoader = require('./db');
 const multerLoader = require('./multer');
 
-module.exports = async function ({expressApp}) {
-    const db = await sqliteLoader();
-    console.log('Sqlite Initialized');
+module.exports = async function ({ expressApp }) {
+    const db = await dbLoader();
+    console.log('DB Initialized');
     const multer = await multerLoader();
     console.log('Multer Initialized');
-    await expressLoader({app: expressApp}, db, multer);
+    await expressLoader({ app: expressApp }, db, multer);
     console.log('Express Initialized');
-}
+};

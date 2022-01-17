@@ -1,17 +1,22 @@
 <template lang="">
     <div v-if="location">
         <div id="location">
-            <h1 id="location-heading">{{location.locationName}}</h1>
-            <div id="location-image"><img :src="'http://localhost:8080/api/img/' + location.image" alt="couldn't load image" width="200" height="200"></div>
-            <p id="location-attributes"><b>Id: </b>{{location.locationID}}<br>
-                <b>Name: </b>{{location.locationName}}<br>
-                <b>Description: </b>{{location.description}}</p>
+            <h1 id="location-heading">{{ location.locationName }}</h1>
+            <div id="location-image">
+                <img :src="'http://127.0.0.1:3000/api/img/' + location.image" alt="couldn't load image" width="200" height="200" />
+            </div>
+            <p id="location-attributes">
+                Id: <span id="location-id">{{ location.locationID }}</span
+                ><br />
+                Name: {{ location.locationName }}<br />
+                Description: {{ location.description }}
+            </p>
         </div>
         <div class="results" id="results" v-if="items">
-            <p id="result-count">found {{items.length}} items at this location</p>
+            <p id="result-count">found {{ items.length }} items at this location</p>
             <ul id="result-list">
                 <li v-for="result in items" :key="result.id">
-                    <item :item="result" @click="this.$router.push(`/item/${result.itemID}`)"/>
+                    <item :item="result" @click="this.$router.push(`/item/${result.itemID}`)" />
                 </li>
             </ul>
         </div>
@@ -19,41 +24,37 @@
     <navbarBottom />
 </template>
 <script>
-import axios from 'axios'
-import Item from '../components/Item'
-import NavbarBottom from '../components/NavbarBottom.vue'
+import axios from 'axios';
+import Item from '../components/Item';
+import NavbarBottom from '../components/NavbarBottom.vue';
 
 export default {
     components: {
         Item,
-        NavbarBottom
+        NavbarBottom,
     },
     data() {
         return {
             location: null,
             items: null,
-        }
+        };
     },
     mounted() {
-        axios.get(`http://localhost:8080/api/locations/${this.$route.params.id}`).then(response => (this.location = response.data[0])); 
-        axios.get(`http://localhost:8080/api/locations/${this.$route.params.id}/items`).then(response => (this.items = response.data)); 
+        axios.get(`http://127.0.0.1:3000/api/locations/${this.$route.params.id}`).then((response) => (this.location = response.data[0]));
+        axios.get(`http://127.0.0.1:3000/api/locations/${this.$route.params.id}/items`).then((response) => (this.items = response.data));
     },
-}
+};
 </script>
 <style scoped>
-    #location {
-        padding-top: 40px;
-        padding-left: 20px;
-        float: left;
-        width: 50%;
-    }
+#location {
+    padding-top: 40px;
+    padding-left: 20px;
+    float: left;
+    width: 50%;
+}
 
-    #location-attributes {
-        width: 390px;
-    }
-
-    .results {
-        position: absolute;
-        left: 400px;
-    }
+.results {
+    position: absolute;
+    left: 400px;
+}
 </style>
