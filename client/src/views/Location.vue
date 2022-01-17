@@ -3,9 +3,9 @@
         <div id="location">
             <h1 id="location-heading">{{location.locationName}}</h1>
             <div id="location-image"><img :src="'http://localhost:8080/api/img/' + location.image" alt="couldn't load image" width="200" height="200"></div>
-            <p id="location-attributes">Id: <span id="location-id">{{location.locationID}}</span><br>
-                Name: {{location.locationName}}<br>
-                Description: {{location.description}}</p>
+            <p id="location-attributes"><b>Id: </b>{{location.locationID}}<br>
+                <b>Name: </b>{{location.locationName}}<br>
+                <b>Description: </b>{{location.description}}</p>
         </div>
         <div class="results" id="results" v-if="items">
             <p id="result-count">found {{items.length}} items at this location</p>
@@ -46,6 +46,10 @@ export default {
         padding-left: 20px;
         float: left;
         width: 50%;
+    }
+
+    #location-attributes {
+        width: 390px;
     }
 
     .results {
