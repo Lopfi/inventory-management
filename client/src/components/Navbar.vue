@@ -11,13 +11,20 @@
       </li>
       <li class="navbar-element"><router-link to="/scan" class="link">Scan</router-link></li>
       <li class="navbar-element"><router-link to="/about" class="link">About</router-link></li>
-      <li><input type="text" placeholder="Search.."></li>
+      <li><input type="text" placeholder="Search.." v-model="search" v-on:keyup.enter="searchSubmit"></li>
     </ul>
 </template>
 <script>
 export default {
-    props: {
-
+    data() {
+        return {
+            search: ""
+        }
+    },
+    methods: {
+        searchSubmit() {
+            
+        }
     }
 }
 </script>

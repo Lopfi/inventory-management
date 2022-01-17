@@ -1,24 +1,19 @@
 <template>
 <div>
-  <div id="nav">
-    <ul class="navbar">
-      <li class="navbar-element"><router-link to="/" class="link">Home</router-link></li>
-      <li class="navbar-element"><router-link to="/results/items" class="link">Items</router-link></li>
-      <li class="navbar-element"><router-link to="/results/locations" class="link">Locations</router-link></li>
-      <li class="navbar-element"><router-link to="" class="link">Add</router-link><i class="fa fa-caret-down"></i>
-        <ul class="dropdown">
-          <li class="dropdown-element"><router-link to="/add/item" class="link">Item</router-link></li>
-          <li class="dropdown-element"><router-link to="/add/location" class="link">Location</router-link></li>
-        </ul>
-      </li>
-      <li class="navbar-element"><router-link to="/scan" class="link">Scan</router-link></li>
-      <li class="navbar-element"><router-link to="/about" class="link">About</router-link></li>
-      <li><input type="text" placeholder="Search.."></li>
-    </ul>
-  </div>
+  <navbar></navbar>
   <router-view/>
 </div>
 </template>
+
+<script>
+  import Navbar from "./components/Navbar.vue"
+
+  export default {
+    components: {
+      Navbar,
+    },
+  };
+</script>
 
 <style>
 * {margin: 0; padding: 0; font-family: Sans-serif;}
