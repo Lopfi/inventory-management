@@ -107,6 +107,6 @@ dist
 #db/
 
 db
-public
+/public
 temp
 

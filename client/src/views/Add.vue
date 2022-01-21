@@ -7,14 +7,12 @@
                 <input v-model="form.name" type="text" id="name" name="itemName" /><br />
                 <label for="description"><span>Description </span></label><br />
                 <input v-model="form.description" type="text" id="description" name="description" /><br />
-                <label v-if="kind === 'item'" for="amount" class="amount-field"><span>Amount</span></label
-                ><br />
+                <label v-if="kind === 'item'" for="amount" class="amount-field"><span>Amount</span></label><br />
                 <input v-model="form.amount" v-if="kind === 'item'" type="number" class="amount-field" id="amount" name="amount" /><br />
-                <label v-if="kind === 'item'" for="locationid" class="location-field"><span>Location</span></label
-                ><br />
+                <label v-if="kind === 'item'" for="locationid" class="location-field"><span>Location</span></label><br />
                 <input v-model="form.location" v-if="kind === 'item'" type="text" class="location-field" id="locationid" name="locationID" /><br />
-                <label for="Images"><span>Images</span></label
-                ><br />
+                <label for="Images"><span>Images</span></label><br />
+                 <v-file-input label="File input" outlined dense capture="user" accept="image/*"></v-file-input>
                 <input @change="filesChange($event.target.files)" type="file" multiple id="images" name="images" /><br /><br />
                 <input type="submit" value="Add" @click.prevent="submit()" />
             </form>
