@@ -5,7 +5,7 @@ module.exports = function () {
         connectionLimit: 10,
         host: 'localhost',
         user: 'root',
-        password: '',
+        password: '1234',
         database: 'inventory_management',
         multipleStatements: true,
     });
@@ -13,7 +13,7 @@ module.exports = function () {
     let locations = `
     CREATE TABLE IF NOT EXISTS locations 
     (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
     name TEXT NOT NULL,
     description TEXT,
     image TEXT
@@ -22,7 +22,7 @@ module.exports = function () {
     let items = `
     CREATE TABLE IF NOT EXISTS items
     (
-    id INTEGER PRIMARY KEY NOT NULL,
+    id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,
     name TEXT NOT NULL,
     description TEXT,
     location INTEGER,
@@ -32,11 +32,9 @@ module.exports = function () {
         REFERENCES locations ( id )
     );`;
 
-    let defaultLocation = `INSERT INTO locations (id, name, description, image)
-    SELECT 0, 'Default', 'No Location specified', 'default.png'
-    WHERE NOT EXISTS (SELECT id FROM locations WHERE id = 0);`;
-
-    db.query(locations + items + defaultLocation, function (error, results) {
+    let defaultLocation = `INSERT INTO locations (id, name, description, image) VALUES (0, 'Default', 'No Location specified', 'default.png')`;
+// TODO check if default location exists
+    db.query(locations + items, function (error, results) {
         if (error) throw error;
         console.log('added default Tables and rows');
     });

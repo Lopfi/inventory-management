@@ -1,7 +1,7 @@
 <template lang="">
     <div id="item" v-if="item">
         <h1 id="item-heading">{{ item.itemName }}</h1>
-        <div id="item-image"><img :src="'http://127.0.0.1:3000/api/img/' + item.image" alt="couldn't load image" width="200" height="200" /></div>
+        <div id="item-image"><img :src="'/api/img/' + item.image" alt="couldn't load image" width="200" height="200" /></div>
         <p id="item-attributes">
             Id: <span id="item-id">{{ item.itemID }}</span
             ><br />
@@ -27,7 +27,7 @@ export default {
         };
     },
     mounted() {
-        axios.get(`http://127.0.0.1:3000/api/items/${this.$route.params.id}`).then((response) => {
+        axios.get(`/api/items/${this.$route.params.id}`).then((response) => {
             this.item = response.data[0];
         });
     },

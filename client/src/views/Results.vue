@@ -12,7 +12,7 @@
                 v-if="kind === 'locations'"
                 :method="this.method"
                 :label="'Generate Labels'"
-                :url="`http://127.0.0.1:3000/api/locations/labels?limit=${this.limit}&offset=${this.offset}`"
+                :url="`/api/locations/labels?limit=${this.limit}&offset=${this.offset}`"
             />
             <btn
                 :method="this.method"
@@ -58,9 +58,11 @@ export default {
 
     methods: {
         getResults() {
+            if(this.kind) {
             axios
-                .get(`http://127.0.0.1:3000/api/${this.kind}?limit=${this.limit}&offset=${this.offset}`)
+                .get(`/api/${this.kind}?limit=${this.limit}&offset=${this.offset}`)
                 .then((response) => (this.results = response.data));
+            }
         },
         method() {},
     },

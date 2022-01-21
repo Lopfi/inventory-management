@@ -16,7 +16,7 @@ exports.sendSqlQuery = function (db, sql, params, res) {
 };
 
 exports.executeSqlQuery = function (db, sql, params, res, success) {
-    db.qery(sql, params, (err, rows) => {
+    db.query(sql, params, (err, rows) => {
         if (err) {
             console.log('Error: ' + err.message);
             res.status(500).json({ message: 'database error' });

@@ -19,7 +19,7 @@ export default {
     },
     methods: {
         delete() {
-            axios.delete(`http://127.0.0.1:3000/api/${this.$route.name.toLowerCase()}s/${this.$route.params.id}`).then((response) => {
+            axios.delete(`/api/${this.$route.name.toLowerCase()}s/${this.$route.params.id}`).then((response) => {
                 alert(response.data.message);
                 this.$router.go(-1);
             });

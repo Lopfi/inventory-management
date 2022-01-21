@@ -3,7 +3,7 @@
         <div id="location">
             <h1 id="location-heading">{{ location.locationName }}</h1>
             <div id="location-image">
-                <img :src="'http://127.0.0.1:3000/api/img/' + location.image" alt="couldn't load image" width="200" height="200" />
+                <img :src="'/api/img/' + location.image" alt="couldn't load image" width="200" height="200" />
             </div>
             <p id="location-attributes">
                 Id: <span id="location-id">{{ location.locationID }}</span
@@ -40,8 +40,8 @@ export default {
         };
     },
     mounted() {
-        axios.get(`http://127.0.0.1:3000/api/locations/${this.$route.params.id}`).then((response) => (this.location = response.data[0]));
-        axios.get(`http://127.0.0.1:3000/api/locations/${this.$route.params.id}/items`).then((response) => (this.items = response.data));
+        axios.get(`/api/locations/${this.$route.params.id}`).then((response) => (this.location = response.data[0]));
+        axios.get(`/api/locations/${this.$route.params.id}/items`).then((response) => (this.items = response.data));
     },
 };
 </script>

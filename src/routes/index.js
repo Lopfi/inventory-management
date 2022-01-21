@@ -73,7 +73,7 @@ module.exports = function (db, upload) {
     router
         .route('/locations/:id')
         .get((req, res) => {
-            let sql = `SELECT *
+            let sql = `SELECT id as locationID, name as locationName, image, description
                    FROM locations
                    WHERE id = ?`;
             sendSqlQuery(db, sql, [req.params.id], res);
@@ -98,7 +98,7 @@ module.exports = function (db, upload) {
         });
 
     router.get('/locations/:id/items', (req, res) => {
-        let sql = `SELECT *
+        let sql = `SELECT id as itemID, name as itemName, image, description, location, amount
                    FROM items
                    WHERE id = ?`;
         sendSqlQuery(db, sql, [req.params.id], res);
@@ -107,7 +107,7 @@ module.exports = function (db, upload) {
     router
         .route('/items/:id')
         .get((req, res) => {
-            let sql = `SELECT *
+            let sql = `SELECT id as itemID, name as itemName, image, description, location as locationID, amount
                    FROM items
                    WHERE id = ?`;
             sendSqlQuery(db, sql, [req.params.id], res);

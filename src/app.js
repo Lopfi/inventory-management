@@ -1,5 +1,7 @@
 const express = require('express');
 const loaders = require('./loaders');
+const dotenv = require('dotenv');
+dotenv.config();
 
 async function startServer() {
 
@@ -7,8 +9,10 @@ async function startServer() {
 
     await loaders({ expressApp: app });
 
-    app.listen(3000, () => console.log('Inventory management listening on port 3000!'));
-}
+    const PORT = process.env.PORT;
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}.`);
+    });}
 
 startServer();
 
