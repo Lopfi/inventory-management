@@ -106,5 +106,7 @@ dist
 #Database file
 #db/
 
-#db/content.db
+db
+public
+temp
 
