@@ -65,8 +65,9 @@ module.exports = function (db, upload) {
                 res.status(500).json({ message: 'database error' });
             } else {
                 //TODO: add fail check
-                generatePDF(rows);
-                res.status(200).download(path.join(__dirname, '../utils/temp/labels.pdf'));
+                generatePDF(rows).then(() => {
+                    res.status(200).download(path.join(__dirname, '../utils/temp/labels.pdf'));
+                });
             }
         });
     });

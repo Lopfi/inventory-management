@@ -1,0 +1,10 @@
+{
+    "sql": {
+        "connectionLimit": 10,
+        "host": "localhost",
+        "user": "root",
+        "password": "",
+        "database": "inventory_management",
+        "multipleStatements": true
+    }
+}

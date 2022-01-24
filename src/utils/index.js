@@ -31,12 +31,6 @@ exports.getImagePaths = function (images) {
     return paths;
 };
 
-function getIp() {
-    return new Promise((resolve) => {
-        require('dns').lookup(require('os').hostname(), (err, add, fam) => resolve(add));
-    });
-}
-
 function generateQR(input, filename) {
     require('fs').writeFileSync(
         path.join(__dirname, filename + '.png'),
@@ -51,8 +45,6 @@ exports.generatePDF = async function (rows) {
     const doc = new PDFDocument();
     doc.pipe(fs.createWriteStream(path.join(__dirname, '/temp/labels.pdf')));
 
-    const ip = getIp();
-
     for (let i = 0; i < rows.length; i++) {
         const location = rows[i];
         let posX = (i % 2) * 200 + 30;
@@ -60,7 +52,7 @@ exports.generatePDF = async function (rows) {
         //doc.addPage();
         doc.fontSize(25).text(location.locationName, posX + 90, posY + 8);
         doc.fontSize(15).text('ID: ' + location.locationID, posX + 90, posY + 30);
-        generateQR(ip + '/locations/' + location.locationID, '/temp/' + location.locationID);
+        generateQR('/locations/' + location.locationID, '/temp/' + location.locationID);
         doc.image(path.join(__dirname, '/temp/' + location.locationID + '.png'), posX, posY, {
             width: 80,
             height: 80,

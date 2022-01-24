@@ -1,14 +1,8 @@
 const mysql = require('mysql');
+const config = require('../../config.json').sql;
 
 module.exports = function () {
-    var db = mysql.createPool({
-        connectionLimit: 10,
-        host: 'localhost',
-        user: 'root',
-        password: '1234',
-        database: 'inventory_management',
-        multipleStatements: true,
-    });
+    var db = mysql.createPool(config);
 
     let locations = `
     CREATE TABLE IF NOT EXISTS locations 
@@ -32,9 +26,9 @@ module.exports = function () {
         REFERENCES locations ( id )
     );`;
 
-    let defaultLocation = `INSERT INTO locations (id, name, description, image) VALUES (0, 'Default', 'No Location specified', 'default.png')`;
-// TODO check if default location exists
-    db.query(locations + items, function (error, results) {
+    let defaultLocation = `INSERT INTO locations (name, description, image) VALUES ( 'Default', 'No Location specified', 'default.png')`;
+    // TODO check if default location exists
+    db.query(locations + items + defaultLocation, function (error, results) {
         if (error) throw error;
         console.log('added default Tables and rows');
     });

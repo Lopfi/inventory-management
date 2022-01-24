@@ -4,18 +4,24 @@
             <p id="result-count">found {{ results.length }} {{ kind }}</p>
             <ul id="result-list">
                 <li v-for="result in results" :key="result.id">
-                    <item :item="result" v-if="kind === 'items'" @click="this.$router.push(`/item/${result.itemID}`)" />
-                    <location :location="result" v-if="kind === 'locations'" @click="this.$router.push(`/location/${result.locationID}`)" />
+                    <item
+                        :item="result"
+                        v-if="kind === 'items'"
+                        @click="this.$router.push(`/item/${result.itemID}`)"
+                    />
+                    <location
+                        :location="result"
+                        v-if="kind === 'locations'"
+                        @click="this.$router.push(`/location/${result.locationID}`)"
+                    />
                 </li>
             </ul>
             <btn
                 v-if="kind === 'locations'"
-                :method="this.method"
                 :label="'Generate Labels'"
                 :url="`/api/locations/labels?limit=${this.limit}&offset=${this.offset}`"
             />
             <btn
-                :method="this.method"
                 :label="'Load more'"
                 @click="
                     limit += 10;
@@ -58,13 +64,12 @@ export default {
 
     methods: {
         getResults() {
-            if(this.kind) {
-            axios
-                .get(`/api/${this.kind}?limit=${this.limit}&offset=${this.offset}`)
-                .then((response) => (this.results = response.data));
+            if (this.kind) {
+                axios
+                    .get(`/api/${this.kind}?limit=${this.limit}&offset=${this.offset}`)
+                    .then((response) => (this.results = response.data));
             }
         },
-        method() {},
     },
 };
 </script>
