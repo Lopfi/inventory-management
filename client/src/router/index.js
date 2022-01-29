@@ -1,22 +1,11 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Home from '../views/Home.vue'
-import About from '../views/About.vue'
 import Add from '../views/Add.vue'
 import Scan from '../views/Scan.vue'
 import Item from '../views/Item.vue'
 import Location from '../views/Location.vue'
 import Results from '../views/Results.vue'
+
 const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: About
-  },
   {
     path: '/results/:kind',
     name: 'Results',
@@ -33,12 +22,12 @@ const routes = [
     component: Scan
   },
   {
-    path: '/item/:id',
+    path: '/items/:id',
     name: 'Item',
     component: Item,
   },
   {
-    path: '/location/:id',
+    path: '/locations/:id',
     name: 'Location',
     component: Location,
   },

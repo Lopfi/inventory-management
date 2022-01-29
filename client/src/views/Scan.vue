@@ -1,22 +1,20 @@
 <template lang="">
     <div class="camera">
         <StreamBarcodeReader @decode="onDecode" @loaded="onLoaded"></StreamBarcodeReader>
+        <q-btn color="grey-9" position="fixed-center" @click="this.$router.push(this.decoded)">Open Scanned Code</q-btn>
     </div>
-    <btn v-if="decoded != null" :label="'test'" @click="getResults(this.kind)" />
 </template>
 <script>
 import { StreamBarcodeReader } from 'vue-barcode-reader';
-import Btn from '../components/Btn.vue';
 
 export default {
     components: {
         StreamBarcodeReader,
-        Btn,
     },
     data() {
         return {
             kind: null,
-            decoded: null,
+            decoded: "",
         };
     },
     methods: {
@@ -37,9 +35,5 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-}
-
-btn {
-    position: relative;
 }
 </style>

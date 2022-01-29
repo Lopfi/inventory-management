@@ -1,48 +1,42 @@
 <template>
     <div>
+        <q-layout>
         <div class="results" id="results" v-if="results">
             <p id="result-count">found {{ results.length }} {{ kind }}</p>
-            <ul id="result-list">
-                <li v-for="result in results" :key="result.id">
-                    <item
-                        :item="result"
-                        v-if="kind === 'items'"
-                        @click="this.$router.push(`/item/${result.itemID}`)"
-                    />
-                    <location
-                        :location="result"
-                        v-if="kind === 'locations'"
-                        @click="this.$router.push(`/location/${result.locationID}`)"
-                    />
-                </li>
-            </ul>
-            <btn
+            <div class="q-pa-md row items-start q-gutter-md">
+                <q-card class="my-card" v-for="result in results" :key="result.id"  @click="this.$router.push(`/items/${result.itemID}`)">
+                    <img :src="'/api/img/' + result.image" style="height: 140px; max-width: 150px">
+
+                    <q-card-section>
+                        <div class="text-h6">{{ result.itemName }}</div>
+                        <div class="text-subtitle2">ID: {{ result.itemID}}</div>
+                    </q-card-section>
+
+                </q-card>
+            </div>
+            <q-btn
                 v-if="kind === 'locations'"
-                :label="'Generate Labels'"
-                :url="`/api/locations/labels?limit=${this.limit}&offset=${this.offset}`"
+                label="Generate Labels"
+                color="grey-9"
+                :href="`/api/locations/labels?limit=${this.limit}&offset=${this.offset}`"
             />
-            <btn
-                :label="'Load more'"
-                @click="
-                    limit += 10;
-                    getResults(this.kind);
-                "
-            />
+            <q-btn color="grey-9" label="Load more" @click="limit += 10; getResults(this.kind);"/>
+
+            <q-page-sticky position="bottom-left" :offset="[18, 18]">
+                <q-btn fab icon="add" color="grey-9" @click="this.$router.push(`/add/${kind}`)"/>
+            </q-page-sticky>
+            <q-page-sticky position="bottom-right" :offset="[18, 18]">
+                <q-btn fab icon="qr_code_scanner" color="grey-9" @click="this.$router.push(`/scan`)"/>
+            </q-page-sticky>
         </div>
+        </q-layout>
     </div>
 </template>
 <script>
 import axios from 'axios';
-import Item from '../components/Item.vue';
-import Location from '../components/Location.vue';
-import Btn from '../components/Btn.vue';
 
 export default {
-    components: {
-        Item,
-        Location,
-        Btn,
-    },
+    components: {},
     data() {
         return {
             kind: null,
