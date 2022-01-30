@@ -1,22 +1,19 @@
 <template lang="">
     <div class="bottom-float">
-        <ul class="navbar-bottom">
-            <li class="navbar-element"><router-link to="" @click="this.$router.go(-1)" class="link">Back</router-link></li>
-            <li class="navbar-element"><router-link to="" @click="this.delete()" class="link">Delete</router-link></li>
-            <li class="navbar-element"><router-link to="" @click="edit()" class="link">Edit</router-link></li>
-        </ul>
+        <q-layout>
+            <q-btn-group class="navbar-bottom">
+                <q-btn color="grey-9" label="Back" icon="arrow_back" @click="this.$router.go(-1)" />
+                <q-btn color="grey-9" label="Delete" icon="delete" @click="this.delete()" />
+                <q-btn color="grey-9" label="Edit" icon="edit" @click="edit()" />
+            </q-btn-group>
+        </q-layout>
     </div>
 </template>
 <script>
 import axios from 'axios';
 
 export default {
-    props: {
-        edit: {
-            type: Function,
-            required: true,
-        },
-    },
+    props: {},
     methods: {
         delete() {
             axios.delete(`/api/${this.$route.name.toLowerCase()}s/${this.$route.params.id}`).then((response) => {
@@ -24,20 +21,12 @@ export default {
                 this.$router.go(-1);
             });
         },
+        edit() {},
     },
 };
 </script>
 <style>
 .navbar-bottom {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    display: inline;
-    list-style-type: none;
-    margin: 0px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    overflow: hidden;
-    background-color: #2f2f2f;
+    margin-left: 10%;
 }
 </style>

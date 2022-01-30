@@ -1,7 +1,7 @@
 <template lang="">
     <div id="item" v-if="item">
-        <h1 id="item-heading">{{ item.itemName }}</h1>
-        <div id="item-image"><img :src="'/api/img/' + item.image" alt="couldn't load image" width="200" height="200" /></div>
+        <span id="item-heading">{{ item.itemName }}</span>
+        <q-img :src="'/api/img/' + item.image" alt="couldn't load image" style="height: 150px; max-width: 150px" />
         <p id="item-attributes">
             Id: <span id="item-id">{{ item.itemID }}</span
             ><br />
@@ -39,10 +39,5 @@ export default {
     padding-left: 20px;
     float: left;
     width: 50%;
-}
-
-#location {
-    position: absolute;
-    left: 400px;
 }
 </style>
