@@ -1,0 +1,10 @@
+{
+    "sql": {
+        "connectionLimit": 10,
+        "host": "mariadb",
+        "user": "root",
+        "password": "1234",
+        "database": "inventory_management",
+        "multipleStatements": true
+    }
+}
