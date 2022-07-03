@@ -1,6 +1,6 @@
 <template lang="">
   <q-card
-    class="result"
+    class="cursor-pointer"
     @click="this.$router.push(`/${kind}/${result.itemID || result.locationID}`)"
   >
     <q-img

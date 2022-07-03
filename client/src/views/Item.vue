@@ -1,43 +1,61 @@
 <template lang="">
-    <div id="item" v-if="item">
-        <span id="item-heading">{{ item.itemName }}</span>
-        <q-img :src="'/api/img/' + item.image" alt="couldn't load image" style="height: 150px; max-width: 150px" />
-        <p id="item-attributes">
-            Id: <span id="item-id">{{ item.itemID }}</span
-            ><br />
-            Name: {{ item.itemName }}<br />
-            Description: {{ item.description }}<br />
-            Amount: {{ item.amount }}<br />
-            <router-link :to="'/location/' + item.locationID" class="link">Location: {{ item.locationID }}</router-link>
-        </p>
-    </div>
-    <navbarBottom />
+  <div v-if="item" class="q-ma-md">
+    <div class="text-h4">{{ item.itemName }}</div>
+    <q-img
+      :src="'/api/img/' + item.image"
+      alt="couldn't load image"
+      style="height: 200px; max-width: 200px"
+    />
+    <q-list separator>
+      <q-item v-ripple>
+        <q-item-section>
+          <q-item-label>{{ item.itemID }}</q-item-label>
+          <q-item-label caption>Id</q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-item v-ripple>
+        <q-item-section>
+          <q-item-label>{{ item.itemName }}</q-item-label>
+          <q-item-label caption>Name</q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-item clickable v-ripple>
+        <q-item-section>
+          <q-item-label>{{ item.description }}</q-item-label>
+          <q-item-label caption>Description</q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-item>
+        <router-link :to="'/locations/' + item.locationID" class="link"
+          >Location: {{ item.locationID }}</router-link
+        >
+      </q-item>
+    </q-list>
+  </div>
+  <navbarBottom />
 </template>
+
 <script>
-import axios from 'axios';
-import NavbarBottom from '../components/NavbarBottom.vue';
+import axios from "axios";
+import NavbarBottom from "../components/NavbarBottom.vue";
 
 export default {
-    components: {
-        NavbarBottom,
-    },
-    data() {
-        return {
-            item: null,
-        };
-    },
-    mounted() {
-        axios.get(`/api/items/${this.$route.params.id}`).then((response) => {
-            this.item = response.data[0];
-        });
-    },
+  components: {
+    NavbarBottom,
+  },
+  data() {
+    return {
+      item: null,
+    };
+  },
+  mounted() {
+    axios.get(`/api/items/${this.$route.params.id}`).then((response) => {
+      this.item = response.data[0];
+    });
+  },
 };
 </script>
-<style scoped>
-#item {
-    padding-top: 40px;
-    padding-left: 20px;
-    float: left;
-    width: 50%;
-}
-</style>
+<style></style>

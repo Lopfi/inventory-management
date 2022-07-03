@@ -114,7 +114,7 @@ module.exports = function (db, upload) {
   router.get("/locations/:id/items", (req, res) => {
     let sql = `SELECT id as itemID, name as itemName, image, description, location, amount
                    FROM items
-                   WHERE id = ?`;
+                   WHERE location = ?`;
     sendSqlQuery(db, sql, [req.params.id], res);
   });
 

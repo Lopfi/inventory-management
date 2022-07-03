@@ -1,11 +1,12 @@
 <template>
-  <q-layout class="results" v-if="results">
+  <q-layout class="q-ma-sm" v-if="results">
     <p id="result-count">found {{ results.length }} {{ kind }}</p>
 
     <q-infinite-scroll
       @load="onLoad"
       :offset="250"
-      class="q-pa-md row items-start q-gutter-md"
+      class="q-pa-md row q-gutter-md"
+      style="margin: 0; padding: 0"
     >
       <result
         v-for="(result, index) in results"
@@ -15,7 +16,7 @@
       />
     </q-infinite-scroll>
 
-    <q-btn-group class="buttons">
+    <q-btn-group class="q-ma-md">
       <q-btn
         v-if="kind === 'locations'"
         label="Generate Labels"
@@ -66,9 +67,9 @@ export default {
         this.kind = val.params.kind;
         this.results = [];
         this.offset = 0;
-        //    this.onLoad(0, () => {
-        console.log("watch", this.kind, this.results.length, this.offset);
-        //    });
+        this.onLoad(0, () => {
+          console.log("watch", this.kind, this.results.length, this.offset);
+        });
       }
     },
   },
@@ -76,12 +77,12 @@ export default {
     this.kind = this.$route.params.kind;
     console.log("mounted", this.kind, this.results.length, this.offset);
   },
-
   methods: {
     onLoad(index, done) {
       this.kind = this.$route.params.kind;
       console.log("loading", this.kind, this.results.length, this.offset);
       if (this.kind) {
+        // && this.results.length == this.offset
         axios
           .get(`/api/${this.kind}?limit=${this.limit}&offset=${this.offset}`)
           .then((response) => {
@@ -95,20 +96,7 @@ export default {
 };
 </script>
 <style>
-.results {
-  padding-top: 20px;
-  padding-left: 20px;
-}
 #result-count {
   color: #808080;
-}
-
-.result :hover {
-  cursor: pointer;
-}
-
-.buttons {
-  margin: 20px;
-  margin-left: 100px;
 }
 </style>
