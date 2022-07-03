@@ -1,10 +1,15 @@
-FROM node:16
-# Create app directory
+FROM node:16 AS ui-build
 WORKDIR /usr/src/app
+COPY client/ ./client/
+RUN cd client && npm install && npm run build
 
+FROM node:16 AS server-build
+WORKDIR /root/
+COPY --from=ui-build /usr/src/app/public ./public
 COPY package*.json ./
-
-RUN npm install && cd client && npm install && npm run build
+RUN npm install
 COPY . .
+
 EXPOSE 3000
-CMD [ "node", "." ]
+
+CMD ["node", "."]
