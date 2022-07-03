@@ -12,21 +12,50 @@
 </template>
 <script>
 import axios from "axios";
+import { useQuasar } from "quasar";
 
 export default {
-  props: {},
-  methods: {
-    delete() {
-      axios
-        .delete(
-          `/api/${this.$route.name.toLowerCase()}s/${this.$route.params.id}`
-        )
-        .then((response) => {
-          alert(response.data.message);
-          this.$router.go(-1);
+  setup() {
+    const $q = useQuasar();
+
+    return {
+      notify(message) {
+        $q.notify({
+          type: "positive",
+          message,
         });
+      },
+      delete() {
+        $q.dialog({
+          title: "Delete",
+          message: `Are you sure you want to delete this ${this.$route.name.toLowerCase()}?`,
+          cancel: true,
+          persistent: true,
+        })
+          .onOk(() => {
+            axios
+              .delete(
+                `/api/${this.$route.name.toLowerCase()}s/${
+                  this.$route.params.id
+                }`
+              )
+              .then((response) => {
+                $q.notify({
+                  type: "positive",
+                  message: response.data.message,
+                });
+                this.$router.go(-1);
+              });
+          })
+          .onCancel(() => {});
+      },
+    };
+  },
+  props: {
+    edit: {
+      type: Function,
+      required: true,
     },
-    edit() {},
   },
 };
 </script>

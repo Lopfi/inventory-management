@@ -75,7 +75,7 @@ export default {
       notify(message) {
         $q.notify({
           type: "positive",
-          message,
+          message: message,
         });
       },
     };
