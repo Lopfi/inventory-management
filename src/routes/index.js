@@ -68,7 +68,6 @@ module.exports = function (db, upload) {
         console.log("Error: " + err.message);
         res.status(500).json({ message: "database error" });
       } else {
-        //TODO: add fail check
         generatePDF(rows);
         setTimeout(() => {}, 500);
         res

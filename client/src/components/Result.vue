@@ -2,6 +2,7 @@
   <q-card
     class="cursor-pointer"
     @click="this.$router.push(`/${kind}/${result.itemID || result.locationID}`)"
+    style="width: 150px; overflow: hidden"
   >
     <q-img
       :src="'/api/img/' + result.image"

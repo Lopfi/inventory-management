@@ -1,6 +1,6 @@
 <template lang="">
   <div class="fixed-center" style="min-width: 300px">
-    <q-form action="/items">
+    <q-form action="/items" @submit="onSubmit">
       <q-input
         filled
         v-model="form.name"
@@ -26,6 +26,7 @@
         />
 
         <q-input
+          v-if="kind !== 'locations'"
           filled
           type="number"
           v-model="form.location"
@@ -33,23 +34,17 @@
         /><br />
       </div>
 
-      <q-input
-        @change="filesChange($event.target.files)"
+      <q-file
+        @rejected="onRejected"
+        v-model="image"
         type="file"
-        multiple
-        id="images"
-        name="images"
-        accept="image/*"
+        label="Image"
+        accept=".jpg, image/*"
         capture="camera"
       /><br />
 
       <q-btn-group spread>
-        <q-btn
-          label="Submit"
-          type="submit"
-          color="grey-9"
-          @click.prevent="submit()"
-        />
+        <q-btn label="Submit" type="submit" color="grey-9" />
       </q-btn-group>
     </q-form>
     <q-btn-group class="q-mt-md" spread>
@@ -64,8 +59,27 @@
 </template>
 <script>
 import axios from "axios";
+import { useQuasar } from "quasar";
 
 export default {
+  setup() {
+    const $q = useQuasar();
+
+    return {
+      onRejected(rejectedEntries) {
+        $q.notify({
+          type: "negative",
+          message: `${rejectedEntries.length} file did not pass validation constraints`,
+        });
+      },
+      notify(message) {
+        $q.notify({
+          type: "positive",
+          message,
+        });
+      },
+    };
+  },
   components: {},
   data() {
     return {
@@ -76,6 +90,7 @@ export default {
         amount: 1,
         location: "1",
       },
+      image: null,
       formData: new FormData(),
     };
   },
@@ -89,24 +104,17 @@ export default {
   },
 
   methods: {
-    submit() {
+    onSubmit() {
+      this.formData = new FormData();
+      this.formData.append("files", this.image);
       this.formData.append("name", this.form.name);
       this.formData.append("description", this.form.description);
       this.formData.append("amount", this.form.amount);
       this.formData.append("location", this.form.location);
-      axios
-        .put(`/api/${this.kind}`, this.formData)
-        .then((response) => alert(response.data.message));
-      this.formData = new FormData();
-    },
-    filesChange(fileList) {
-      const formData = new FormData();
-      if (!fileList.length) return;
-      for (var i = 0; i < fileList.length; i++) {
-        let file = fileList[i];
-        formData.append("files", file);
-      }
-      this.formData = formData;
+      axios.put(`/api/${this.kind}`, this.formData).then((response) => {
+        this.notify(response.data.message);
+        this.$router.go(-1);
+      });
     },
   },
 };
