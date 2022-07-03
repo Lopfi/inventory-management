@@ -1,65 +1,65 @@
 <template lang="">
-  <q-form action="/items">
-    <q-input
-      filled
-      v-model="form.name"
-      label="Name"
-      lazy-rules
-      :rules="[(val) => (val && val.length > 0) || 'Please type something']"
-    />
-
-    <q-input filled v-model="form.description" label="Description" /><br />
-
-    <div>
+  <div class="fixed-center" style="min-width: 300px">
+    <q-form action="/items">
       <q-input
-        v-if="kind !== 'locations'"
         filled
-        type="number"
-        v-model="form.amount"
-        label="Amount"
+        v-model="form.name"
+        label="Name"
         lazy-rules
-        :rules="[
-          (val) => (val !== null && val !== '') || 'Please specify an amount',
-          (val) => val > 0 || 'Please type a real amount',
-        ]"
+        :rules="[(val) => (val && val.length > 0) || 'Please type something']"
       />
 
+      <q-input filled v-model="form.description" label="Description" /><br />
+
+      <div>
+        <q-input
+          v-if="kind !== 'locations'"
+          filled
+          type="number"
+          v-model="form.amount"
+          label="Amount"
+          lazy-rules
+          :rules="[
+            (val) => (val !== null && val !== '') || 'Please specify an amount',
+            (val) => val > 0 || 'Please type a real amount',
+          ]"
+        />
+
+        <q-input
+          filled
+          type="number"
+          v-model="form.location"
+          label="Location"
+        /><br />
+      </div>
+
       <q-input
-        filled
-        type="number"
-        v-model="form.location"
-        label="Location"
+        @change="filesChange($event.target.files)"
+        type="file"
+        multiple
+        id="images"
+        name="images"
+        accept="image/*"
+        capture="camera"
       /><br />
-    </div>
 
-    <q-input
-      @change="filesChange($event.target.files)"
-      type="file"
-      multiple
-      id="images"
-      name="images"
-      accept="image/*"
-      capture="camera"
-    /><br />
-
-    <q-btn
-      label="Submit"
-      type="submit"
-      color="grey-9"
-      @click.prevent="submit()"
-    />
-  </q-form>
-  <div class="bottom-float">
-    <q-layout>
-      <q-btn-group class="navbar-bottom">
+      <q-btn-group spread>
         <q-btn
+          label="Submit"
+          type="submit"
           color="grey-9"
-          label="Back"
-          icon="arrow_back"
-          @click="this.$router.go(-1)"
+          @click.prevent="submit()"
         />
       </q-btn-group>
-    </q-layout>
+    </q-form>
+    <q-btn-group class="q-mt-md" spread>
+      <q-btn
+        color="grey-9"
+        label="Back"
+        icon="arrow_back"
+        @click="this.$router.go(-1)"
+      />
+    </q-btn-group>
   </div>
 </template>
 <script>
@@ -111,13 +111,4 @@ export default {
   },
 };
 </script>
-<style>
-#add-menu {
-  padding-top: 0px;
-}
-
-form {
-  max-width: 500px;
-  padding: 30px 20px 20px 50px;
-}
-</style>
+<style></style>

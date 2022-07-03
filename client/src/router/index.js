@@ -1,46 +1,54 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
-import Add from '../views/Add.vue'
-import Scan from '../views/Scan.vue'
-import Item from '../views/Item.vue'
-import Location from '../views/Location.vue'
-import Results from '../views/Results.vue'
+import { createRouter, createWebHashHistory } from "vue-router";
+import Add from "../views/Add.vue";
+import Scan from "../views/Scan.vue";
+import Item from "../views/Item.vue";
+import Location from "../views/Location.vue";
+import Results from "../views/Results.vue";
 
 const routes = [
   {
-    path: '/results/:kind',
-    name: 'Results',
-    component: Results
+    path: "/",
+    redirect: () => {
+      // the function receives the target route as the argument
+      // we return a redirect path/location here.
+      return { path: "/results/items" };
+    },
   },
   {
-    path: '/add/:kind',
-    name: 'Add',
-    component: Add
+    path: "/results/:kind",
+    name: "Results",
+    component: Results,
   },
   {
-    path: '/scan',
-    name: 'Scan',
-    component: Scan
+    path: "/add/:kind",
+    name: "Add",
+    component: Add,
   },
   {
-    path: '/items/:id',
-    name: 'Item',
+    path: "/scan",
+    name: "Scan",
+    component: Scan,
+  },
+  {
+    path: "/items/:id",
+    name: "Item",
     component: Item,
   },
   {
-    path: '/locations/:id',
-    name: 'Location',
+    path: "/locations/:id",
+    name: "Location",
     component: Location,
   },
-]
+];
 
 const router = new createRouter({
   history: createWebHashHistory(),
-  routes
-})
+  routes,
+});
 
 router.beforeEach((to, from, next) => {
   document.title = to.name;
   next();
 });
 
-export default router
+export default router;
