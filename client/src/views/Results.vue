@@ -1,93 +1,114 @@
 <template>
-    <q-layout class="results" v-if="results">
-        <p id="result-count">found {{ results.length }} {{ kind }}</p>
-        <div class="q-pa-md row items-start q-gutter-md">
-            <q-card
-                class="result"
-                v-for="result in results"
-                :key="result.id"
-                @click="this.$router.push(`/${kind}/${result.itemID || result.locationID}`)"
-            >
-                <img :src="'/api/img/' + result.image" style="height: 140px; max-width: 150px" />
+  <q-layout class="results" v-if="results">
+    <p id="result-count">found {{ results.length }} {{ kind }}</p>
 
-                <q-card-section>
-                    <div class="text-h6">{{ result.itemName || result.locationName }}</div>
-                    <div class="text-subtitle2">ID: {{ result.itemID || result.locationID }}</div>
-                </q-card-section>
-            </q-card>
-        </div>
-        <q-btn-group class="buttons">
-            <q-btn
-                v-if="kind === 'locations'"
-                label="Generate Labels"
-                color="grey-9"
-                :href="`/api/locations/labels?limit=${this.limit}&offset=${this.offset}`"
-            />
-            <q-btn
-                color="grey-9"
-                label="Load more"
-                @click="
-                    limit += 10;
-                    getResults(this.kind);
-                "
-            />
-        </q-btn-group>
-        <q-page-sticky position="bottom-left" :offset="[18, 18]">
-            <q-btn fab icon="add" color="grey-9" @click="this.$router.push(`/add/${kind}`)" />
-        </q-page-sticky>
-        <q-page-sticky position="bottom-right" :offset="[18, 18]">
-            <q-btn fab icon="qr_code_scanner" color="grey-9" @click="this.$router.push(`/scan`)" />
-        </q-page-sticky>
-    </q-layout>
+    <q-infinite-scroll
+      @load="onLoad"
+      :offset="250"
+      class="q-pa-md row items-start q-gutter-md"
+    >
+      <result
+        v-for="(result, index) in results"
+        :result="result"
+        :kind="kind"
+        :key="index"
+      />
+    </q-infinite-scroll>
+
+    <q-btn-group class="buttons">
+      <q-btn
+        v-if="kind === 'locations'"
+        label="Generate Labels"
+        color="grey-9"
+        :href="`/api/locations/labels`"
+      />
+    </q-btn-group>
+
+    <q-page-sticky position="bottom-left" :offset="[18, 18]">
+      <q-btn
+        fab
+        icon="add"
+        color="grey-9"
+        @click="this.$router.push(`/add/${kind}`)"
+      />
+    </q-page-sticky>
+
+    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-btn
+        fab
+        icon="qr_code_scanner"
+        color="grey-9"
+        @click="this.$router.push(`/scan`)"
+      />
+    </q-page-sticky>
+  </q-layout>
 </template>
 <script>
-import axios from 'axios';
+import axios from "axios";
+
+import Result from "../components/Result.vue";
 
 export default {
-    components: {},
-    data() {
-        return {
-            kind: null,
-            limit: 100,
-            offset: 0,
-            results: null,
-        };
+  components: {
+    Result,
+  },
+  data() {
+    return {
+      kind: null,
+      limit: 10,
+      offset: 0,
+      results: [],
+    };
+  },
+  watch: {
+    $route(val) {
+      if (this.kind != val.params.kind) {
+        this.kind = val.params.kind;
+        this.results = [];
+        this.offset = 0;
+        //    this.onLoad(0, () => {
+        console.log("watch", this.kind, this.results.length, this.offset);
+        //    });
+      }
     },
-    watch: {
-        $route(val) {
-            this.kind = val.params.kind;
-            this.getResults();
-        },
-    },
-    mounted() {
-        this.kind = this.$route.params.kind;
-        this.getResults();
-    },
+  },
+  mounted() {
+    this.kind = this.$route.params.kind;
+    console.log("mounted", this.kind, this.results.length, this.offset);
+  },
 
-    methods: {
-        getResults() {
-            if (this.kind) {
-                axios.get(`/api/${this.kind}?limit=${this.limit}&offset=${this.offset}`).then((response) => (this.results = response.data));
-            }
-        },
+  methods: {
+    onLoad(index, done) {
+      this.kind = this.$route.params.kind;
+      console.log("loading", this.kind, this.results.length, this.offset);
+      if (this.kind) {
+        axios
+          .get(`/api/${this.kind}?limit=${this.limit}&offset=${this.offset}`)
+          .then((response) => {
+            this.results = this.results.concat(response.data);
+            this.offset += this.limit;
+            done();
+          });
+      }
     },
+  },
 };
 </script>
 <style>
 .results {
-    padding-top: 20px;
-    padding-left: 20px;
+  padding-top: 20px;
+  padding-left: 20px;
 }
 #result-count {
-    color: #808080;
+  color: #808080;
 }
 
 .result :hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .buttons {
-    margin: 20px;
-    margin-left: 100px;
+  margin: 20px;
+  margin-left: 100px;
 }
 </style>
