@@ -1,0 +1,13 @@
+---
+version: "2.1"
+services:
+  inventroy-management:
+    image: lopfi/inventroy-management:latest
+    container_name: inventroy-management
+    environment:
+      - PORT=3000
+    volumes:
+      - ./db:/db
+    ports:
+      - 3000:3000
+    restart: unless-stopped
