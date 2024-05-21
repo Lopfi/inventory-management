@@ -68,19 +68,19 @@ export default {
         this.results = [];
         this.offset = 0;
         this.onLoad(0, () => {
-          console.log("watch", this.kind, this.results.length, this.offset);
+          //console.log("watch", this.kind, this.results.length, this.offset);
         });
       }
     },
   },
   mounted() {
     this.kind = this.$route.params.kind;
-    console.log("mounted", this.kind, this.results.length, this.offset);
+    //console.log("mounted", this.kind, this.results.length, this.offset);
   },
   methods: {
     onLoad(index, done) {
       this.kind = this.$route.params.kind;
-      console.log("loading", this.kind, this.results.length, this.offset);
+      //console.log("loading", this.kind, this.results.length, this.offset);
       if (this.kind) {
         // && this.results.length == this.offset
         axios
